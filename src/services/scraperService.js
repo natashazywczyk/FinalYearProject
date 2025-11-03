@@ -8,7 +8,7 @@ import * as cheerio from 'cheerio'
 class VapingProductScraper {
   constructor() {
     this.headers = {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
     }
   }
 
@@ -92,7 +92,10 @@ class VapingProductScraper {
       if (price) {
         // Clean up price (remove currency symbols, whitespace, etc.)
         price = price.replace(/[^\d.,]/g, '').trim()
-        return price || 'N/A'
+        // Validate the price format (should be a valid number)
+        if (price && /^\d+([.,]\d{1,2})?$/.test(price)) {
+          return price
+        }
       }
     }
     

@@ -79,7 +79,7 @@
 
           <q-card-section>
             <div class="text-h6 text-primary">
-              {{ product.price !== 'N/A' ? '£' + product.price : 'Price not available' }}
+              {{ formatPrice(product.price) }}
             </div>
             <div class="text-caption text-grey-7">
               Scraped: {{ formatDate(product.scrapedAt) }}
@@ -183,13 +183,20 @@ export default {
       return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
     }
 
+    const formatPrice = (price) => {
+      if (!price || price === 'N/A') return 'Price not available'
+      // Default to GBP, but could be extended to detect currency
+      return '£' + price
+    }
+
     return {
       products,
       loading,
       scrapeUrl,
       loadMockProducts,
       scrapeFromUrl,
-      formatDate
+      formatDate,
+      formatPrice
     }
   }
 }
