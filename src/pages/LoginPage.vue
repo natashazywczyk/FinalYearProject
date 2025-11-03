@@ -1,5 +1,5 @@
 <template>
-  <q-page class="flex flex-center bg-grey-2">
+  <div class="flex flex-center bg-grey-2" style="min-height: 100vh;">
     <q-card class="login-card q-pa-md">
       <q-card-section class="text-center">
         <div class="text-h4 q-mb-md">
@@ -68,7 +68,7 @@
         </q-form>
       </q-card-section>
     </q-card>
-  </q-page>
+  </div>
 </template>
 
 <script>

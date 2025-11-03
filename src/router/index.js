@@ -21,6 +21,22 @@ const routes = [
     ]
   },
   {
+    path: '/demo',
+    component: () => import('../layouts/MainLayout.vue'),
+    children: [
+      { 
+        path: '', 
+        name: 'DemoHome',
+        component: () => import('../pages/IndexPage.vue')
+      },
+      { 
+        path: 'products', 
+        name: 'DemoProducts',
+        component: () => import('../pages/ProductsPage.vue')
+      }
+    ]
+  },
+  {
     path: '/login',
     name: 'Login',
     component: () => import('../pages/LoginPage.vue')
