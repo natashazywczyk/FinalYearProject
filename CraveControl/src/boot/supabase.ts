@@ -1,0 +1,19 @@
+import { boot } from 'quasar/wrappers';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+const supabase: SupabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+declare module '@vue/runtime-core' {
+  interface ComponentCustomProperties {
+    $supabase: SupabaseClient;
+  }
+}
+
+export default boot(({ app }) => {
+  app.config.globalProperties.$supabase = supabase;
+});
+
+export { supabase };
