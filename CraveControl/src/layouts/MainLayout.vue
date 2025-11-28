@@ -6,7 +6,7 @@
 
         <q-toolbar-title>
           <router-link to="/" style="text-decoration: none; color: inherit">
-            Quasar App
+            CraveControl
           </router-link>
         </q-toolbar-title>
 
