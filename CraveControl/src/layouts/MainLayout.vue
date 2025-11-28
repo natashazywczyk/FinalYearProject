@@ -4,7 +4,11 @@
       <q-toolbar>
         <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
 
-        <q-toolbar-title> Quasar App </q-toolbar-title>
+        <q-toolbar-title>
+          <router-link to="/" style="text-decoration: none; color: inherit">
+            Quasar App
+          </router-link>
+        </q-toolbar-title>
 
         <q-btn flat label="Login" to="/login" />
       </q-toolbar>
