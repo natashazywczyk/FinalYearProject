@@ -32,3 +32,7 @@ yarn-error.log*
 # local .env files
 .env
 .env.local*
+
+# Supabase
+supabase/.temp/
+supabase/.branches/
