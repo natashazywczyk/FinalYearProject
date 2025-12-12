@@ -53,23 +53,38 @@ const email = ref('');
 const password = ref('');
 const loading = ref(false);
 
+// Handle user sign up, authenticate the account when user created
 const handleSignup = async () => {
   loading.value = true;
   try {
-    const { error } = await supabase.auth.signUp({
+    // Create authenticated user
+    const { data, error } = await supabase.auth.signUp({
       email: email.value,
       password: password.value,
     });
 
     if (error) throw error;
 
+    // Create profile in account table
+    if (data.user) {
+      const { error: profileError } = await supabase
+        .from('account')
+        .insert([{ user_id: data.user.id }]);
+
+      if (profileError) {
+        console.error('Profile creation error:', profileError);
+      }
+    }
+
     $q.notify({
       type: 'positive',
-      message: 'Sign up successful! An email has been sent for confirmation.',
+      message: 'Sign up successful!',
     });
 
     await router.push('/login');
   } catch (error) {
+    // If there was a sign up error
+    console.error('Signup error:', error);
     const err = error as Error;
     $q.notify({
       type: 'negative',
