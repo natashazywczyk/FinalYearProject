@@ -81,7 +81,7 @@ const handleSignup = async () => {
       message: 'Sign up successful!',
     });
 
-    await router.push('/login');
+    await router.push('/dashboard');
   } catch (error) {
     // If there was a sign up error
     console.error('Signup error:', error);

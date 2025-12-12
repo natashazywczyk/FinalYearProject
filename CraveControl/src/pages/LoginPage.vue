@@ -53,6 +53,7 @@ const email = ref('');
 const password = ref('');
 const loading = ref(false);
 
+// Handle user log in, with previously created account
 const handleLogin = async () => {
   loading.value = true;
   try {
@@ -68,7 +69,7 @@ const handleLogin = async () => {
       message: 'Signed in successfully!',
     });
 
-    await router.push('/');
+    await router.push('/dashboard');
   } catch (error) {
     const err = error as Error;
     $q.notify({
