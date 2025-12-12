@@ -10,8 +10,7 @@
           </div>
         </q-toolbar-title>
 
-        <q-btn v-if="!isLoggedIn" flat label="Login" to="/login" />
-        <q-btn v-else flat label="Logout" @click="handleLogout" />
+        <q-btn v-if="isLoggedIn" flat label="Logout" @click="handleLogout" />
       </q-toolbar>
     </q-header>
 
@@ -78,8 +77,8 @@ const handleLogout = async (): Promise<void> => {
   await router.push('/');
 };
 
-onMounted(async () => {
-  await checkAuthState();
+onMounted(() => {
+  void checkAuthState();
 
   // Listen for auth state changes
   supabase.auth.onAuthStateChange((event, session) => {
