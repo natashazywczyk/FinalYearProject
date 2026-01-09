@@ -19,7 +19,7 @@
                 style="width: 100%; display: block;"
               />
               <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-                <div class="text-h3 text-white" style="font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">€0.00</div>
+                <div class="text-h2 text-white" style="font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">€{{ displayedSavings.toFixed(2) }}</div>
               </div>
             </div>
           </div>
@@ -31,4 +31,31 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue';
+
+const displayedSavings = ref(0);
+const targetSavings = ref(10); // Example target savings amount for demo
+
+const animateSavings = () => {
+  const duration = 1200;
+  const steps = 60;
+  const increment = targetSavings.value / steps;
+  const stepDuration = duration / steps;
+
+  let currentStep = 0;
+
+  const timer = setInterval(() => {
+    currentStep++;
+    displayedSavings.value += increment;
+
+    if (currentStep >= steps) {
+      displayedSavings.value = targetSavings.value;
+      clearInterval(timer);
+    }
+  }, stepDuration);
+};
+
+onMounted(() => {
+  animateSavings();
+});
 </script>
