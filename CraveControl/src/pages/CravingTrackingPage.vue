@@ -74,6 +74,9 @@ const chartOptions = ref({
     type: 'line',
     toolbar: {
       show: false
+    },
+    zoom: {
+      enabled: false
     }
   },
   stroke: {
