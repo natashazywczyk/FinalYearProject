@@ -81,7 +81,7 @@ onMounted(() => {
   void checkAuthState();
 
   // Listen for auth state changes
-  supabase.auth.onAuthStateChange((event, session) => {
+  supabase.auth.onAuthStateChange((_event, session) => {
     isLoggedIn.value = !!session;
   });
 });
