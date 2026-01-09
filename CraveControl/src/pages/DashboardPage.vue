@@ -17,7 +17,7 @@
                 </div>
               </q-card-section>
               <q-card-actions align="center">
-                <q-btn color="primary" label="View Savings" unelevated />
+                <q-btn color="primary" label="View Savings" unelevated to="/savings" />
               </q-card-actions>
             </q-card>
           </div>
@@ -31,7 +31,7 @@
                 </div>
               </q-card-section>
               <q-card-actions align="center">
-                <q-btn color="primary" label="Log Craving Level" unelevated />
+                <q-btn color="primary" label="Log Craving Level" unelevated to="/log-craving" />
               </q-card-actions>
             </q-card>
           </div>
@@ -45,7 +45,7 @@
                 </div>
               </q-card-section>
               <q-card-actions align="center">
-                <q-btn color="primary" label="Learn More" unelevated />
+                <q-btn color="primary" label="Learn More" unelevated to="/information" />
               </q-card-actions>
             </q-card>
           </div>
