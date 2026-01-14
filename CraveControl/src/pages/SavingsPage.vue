@@ -10,6 +10,16 @@
           Track how much money you've saved by resisting your cravings
         </div>
 
+        <div class="q-mb-md">
+          <span>Make sure you have a product selected</span>
+          <q-btn
+            label="Select Product"
+            to="/product-selection"
+            color="primary"
+            class="q-ml-sm"
+          />
+        </div>
+
         <div class="row justify-center q-mt-xl q-mb-xl">
           <div class="col-12 col-md-6 text-center">
             <div style="position: relative; display: inline-block; max-width: 500px; width: 100%;">
