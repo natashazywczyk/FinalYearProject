@@ -1,6 +1,6 @@
 <template>
   <q-page class="q-pa-md">
-    <div class="row justify-center">
+    <div v-if="imageLoaded" class="row justify-center">
       <div class="col-12 col-md-10">
 
         <q-btn flat icon="arrow_back" label="Back" to="/dashboard" class="q-mb-md" />
@@ -37,12 +37,16 @@
 
       </div>
     </div>
+    <div v-else class="row justify-center items-center" style="min-height: 400px;">
+      <q-spinner color="primary" size="50px" />
+    </div>
   </q-page>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 
+const imageLoaded = ref(false);
 const displayedSavings = ref(0);
 const targetSavings = ref(10); // Example target savings amount for demo
 
@@ -66,6 +70,11 @@ const animateSavings = () => {
 };
 
 onMounted(() => {
-  animateSavings();
+  const img = new Image();
+  img.src = '/images/savings-pot.png';
+  img.onload = () => {
+    imageLoaded.value = true;
+    animateSavings();
+  };
 });
 </script>
