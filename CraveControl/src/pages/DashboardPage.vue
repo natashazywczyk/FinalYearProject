@@ -7,6 +7,22 @@
           Track your cravings and view your progress!
         </div>
 
+        <div class="row q-col-gutter-md q-mb-md">
+          <div class="col-12">
+            <q-card class="cursor-pointer" flat bordered>
+              <q-card-section class="text-center">
+                <div class="text-h6">Nicotine Product Selection</div>
+                <div class="text-caption text-grey-7 q-mt-sm">
+                  Select the nicotine products you typically use/wanted to buy
+                </div>
+              </q-card-section>
+              <q-card-actions align="center">
+                <q-btn color="primary" label="Select Products" unelevated to="/product-selection" />
+              </q-card-actions>
+            </q-card>
+          </div>
+        </div>
+
         <div class="row q-col-gutter-md">
           <div class="col-12 col-md-4">
             <q-card class="cursor-pointer" flat bordered>
