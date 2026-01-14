@@ -34,5 +34,5 @@ yarn-error.log*
 .env.local*
 
 # Supabase
-supabase/.temp/
-supabase/.branches/
+CraveControl/supabase/.temp/
+CraveControl/supabase/.branches/
