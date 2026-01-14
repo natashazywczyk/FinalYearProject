@@ -6,6 +6,7 @@ import {
   createWebHistory,
 } from 'vue-router';
 import routes from './routes';
+import { supabase } from 'src/boot/supabase';
 
 /*
  * If not building with SSR mode, you can
@@ -31,6 +32,18 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.VUE_ROUTER_BASE),
+  });
+
+  // Navigation guard to redirect authenticated users from index page
+  Router.beforeEach(async (to, from, next) => {
+    const { data: { session } } = await supabase.auth.getSession();
+
+    // If user is logged in and trying to access index, login, or signup pages
+    if (session && (to.path === '/' || to.path === '/login' || to.path === '/signup')) {
+      next('/dashboard');
+    } else {
+      next();
+    }
   });
 
   return Router;
