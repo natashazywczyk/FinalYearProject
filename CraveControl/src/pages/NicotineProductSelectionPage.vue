@@ -2,6 +2,9 @@
   <q-page class="q-pa-md">
     <div class="row justify-center">
       <div class="col-12 col-md-10">
+
+        <q-btn flat icon="arrow_back" label="Back" to="/dashboard" class="q-mb-md" />
+
         <div class="text-h4 q-mb-md">Nicotine Product Selection</div>
         <div class="text-subtitle1 q-mb-lg text-grey-7">
           Select the nicotine product you usually use/thought of buying
