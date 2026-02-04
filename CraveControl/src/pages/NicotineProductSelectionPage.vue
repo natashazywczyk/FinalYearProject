@@ -69,29 +69,24 @@
                 :class="{ 'selected-card': selectedProduct?.name === product.name }"
                 @click="selectProduct(product)"
               >
-                <q-card-section class="text-center">
-                  <q-img
-                    v-if="product.imageUrl"
-                    :src="product.imageUrl"
-                    style="height: 150px"
-                    fit="contain"
-                    class="q-mb-md"
-                  />
+                <q-card-section class="text-center relative-position">
+                  <div class="product-image-container">
+                    <q-img
+                      v-if="product.imageUrl"
+                      :src="product.imageUrl"
+                      style="height: 150px"
+                      fit="contain"
+                      class="q-mb-md"
+                    />
+                    <div v-if="selectedProduct?.name === product.name" class="product-overlay">
+                      <q-btn color="primary" label="Save" size="lg" @click.stop="saveSelection" />
+                    </div>
+                  </div>
                   <div class="text-subtitle1">{{ product.name }}</div>
                   <div class="text-h6 text-primary q-mt-sm">€{{ product.price }}</div>
                 </q-card-section>
               </q-card>
             </div>
-          </div>
-
-          <div class="row justify-center q-mt-md">
-            <q-btn
-              color="primary"
-              label="Save Selection"
-              size="lg"
-              :disable="!selectedProduct"
-              @click="saveSelection"
-            />
           </div>
         </div>
       </div>
@@ -122,6 +117,23 @@
 .product-card:hover {
   transform: scale(1.02);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.product-image-container {
+  position: relative;
+}
+
+.product-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
 }
 </style>
 
