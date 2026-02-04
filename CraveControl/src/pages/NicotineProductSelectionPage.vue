@@ -4,146 +4,131 @@
       <div class="col-12 col-md-10">
         <q-btn flat icon="arrow_back" label="Back" to="/dashboard" class="q-mb-md" />
 
-        <div class="text-h4 q-mb-md">Nicotine Product Selection</div>
-        <div class="text-subtitle1 q-mb-lg text-grey-7">
-          Select the nicotine product you usually use/thought of buying
+        <div class="text-h4 q-mb-md text-center">Nicotine Product Selection</div>
+        <div class="text-subtitle1 q-mb-lg text-grey-7 text-center">
+          Find the product you use or are thinking/thought of buying
         </div>
 
-        <div class="row q-col-gutter-md">
-          <div class="col-12 col-md-4">
-            <q-select
-              v-model="selectedDisposable"
-              :options="disposableOptions"
-              label="Disposable"
-              outlined
-              clearable
-              option-label="name"
-              option-value="name"
-              options-dense
-              behavior="menu"
-            >
-              <template v-slot:option="scope">
-                <q-item v-bind="scope.itemProps">
-                  <q-item-section avatar v-if="scope.opt.imageUrl">
-                    <q-avatar rounded>
-                      <img :src="scope.opt.imageUrl" />
-                    </q-avatar>
-                  </q-item-section>
-                  <q-item-section>
-                    <q-item-label>{{ scope.opt.name }}</q-item-label>
-                    <q-item-label caption>€{{ scope.opt.price }}</q-item-label>
-                  </q-item-section>
-                </q-item>
-              </template>
-              <template v-slot:selected-item="scope">
-                <div>{{ scope.opt.name }}</div>
-              </template>
-            </q-select>
-            <div v-if="selectedDisposable" class="q-mt-md">
-              <q-card>
-                <q-card-section class="text-center">
-                  <img
-                    v-if="selectedDisposable.imageUrl"
-                    :src="selectedDisposable.imageUrl"
-                    style="max-width: 150px; max-height: 150px"
-                    class="q-mb-md"
-                  />
-                  <div class="text-subtitle1">{{ selectedDisposable.name }}</div>
-                  <div class="text-h6 text-primary q-mt-sm">€{{ selectedDisposable.price }}</div>
-                </q-card-section>
-              </q-card>
-            </div>
-          </div>
-
-          <div class="col-12 col-md-4">
-            <q-select
-              v-model="selectedLiquid"
-              :options="liquidOptions"
-              label="Liquids"
-              outlined
-              clearable
-              option-label="name"
-              option-value="name"
-              options-dense
-              behavior="menu"
-            >
-              <template v-slot:option="scope">
-                <q-item v-bind="scope.itemProps">
-                  <q-item-section avatar v-if="scope.opt.imageUrl">
-                    <q-avatar rounded>
-                      <img :src="scope.opt.imageUrl" />
-                    </q-avatar>
-                  </q-item-section>
-                  <q-item-section>
-                    <q-item-label>{{ scope.opt.name }}</q-item-label>
-                    <q-item-label caption>€{{ scope.opt.price }}</q-item-label>
-                  </q-item-section>
-                </q-item>
-              </template>
-              <template v-slot:selected-item="scope">
-                <div>{{ scope.opt.name }}</div>
-              </template>
-            </q-select>
-            <div v-if="selectedLiquid" class="q-mt-md">
-              <q-card>
-                <q-card-section class="text-center">
-                  <img
-                    v-if="selectedLiquid.imageUrl"
-                    :src="selectedLiquid.imageUrl"
-                    style="max-width: 150px; max-height: 150px"
-                    class="q-mb-md"
-                  />
-                  <div class="text-subtitle1">{{ selectedLiquid.name }}</div>
-                  <div class="text-h6 text-primary q-mt-sm">€{{ selectedLiquid.price }}</div>
-                </q-card-section>
-              </q-card>
-            </div>
-          </div>
-
-          <div class="col-12 col-md-4">
-            <q-select
-              v-model="selectedPatch"
-              :options="pouchOptions"
-              label="Nicotine Patches"
-              outlined
-              clearable
-              option-label="name"
-              option-value="name"
-              options-dense
-              behavior="menu"
-            >
-              <!-- Fill with products from json for nicotine patches -->
-            </q-select>
-            <div v-if="selectedPatch" class="q-mt-md">
-              <q-card>
-                <q-card-section class="text-center">
-                  <div class="text-subtitle1">{{ selectedPatch.name }}</div>
-                  <div class="text-h6 text-primary q-mt-sm">{{ selectedPatch.price }}</div>
+        <!-- Select Product Type -->
+        <div v-if="currentStep === 1" class="q-mt-lg">
+          <div class="text-h6 q-mb-md text-center">What type of product do you use?</div>
+          <div class="row q-col-gutter-md justify-center">
+            <div class="col-12 col-sm-4" v-for="type in productTypes" :key="type.value">
+              <q-card
+                class="cursor-pointer transition hover-card"
+                :class="{ 'selected-card': selectedProductType === type.value }"
+                @click="selectProductType(type.value)"
+              >
+                <q-card-section class="text-center q-pa-lg">
+                  <div class="text-h6">{{ type.label }}</div>
+                  <div class="text-caption text-grey-7">{{ type.description }}</div>
                 </q-card-section>
               </q-card>
             </div>
           </div>
         </div>
 
-        <div class="row justify-center q-mt-lg">
-          <q-btn
-            color="primary"
-            label="Save"
-            size="lg"
-            :disable="!selectedDisposable && !selectedLiquid && !selectedPatch"
-            @click="saveSelection"
-          />
+        <!-- Select Brand -->
+        <div v-if="currentStep === 2" class="q-mt-lg">
+          <div class="text-h6 q-mb-md text-center">Which brand do you prefer?</div>
+          <div class="row q-col-gutter-sm justify-center">
+            <div class="col-6 col-sm-4 col-md-3" v-for="brand in availableBrands" :key="brand">
+              <q-btn
+                :label="brand"
+                :outline="selectedBrand !== brand"
+                :color="selectedBrand === brand ? 'primary' : 'grey-7'"
+                class="full-width"
+                size="lg"
+                @click="selectBrand(brand)"
+              />
+            </div>
+          </div>
+          <div class="row justify-start q-mt-md">
+            <q-btn flat label="Return" icon="arrow_back" @click="currentStep = 1" />
+          </div>
+        </div>
+
+        <!-- Select Product -->
+        <div v-if="currentStep === 3" class="q-mt-lg">
+          <div class="text-h6 q-mb-md text-center">Select your {{ selectedProductType }}</div>
+          <div class="text-subtitle2 q-mb-lg text-grey-7 text-center">
+            Brand: {{ selectedBrand }}
+          </div>
+
+          <div class="row q-col-gutter-md">
+            <div
+              class="col-12 col-sm-6 col-md-4"
+              v-for="product in filteredProducts"
+              :key="product.name"
+            >
+              <q-card
+                class="cursor-pointer product-card"
+                :class="{ 'selected-card': selectedProduct?.name === product.name }"
+                @click="selectProduct(product)"
+              >
+                <q-card-section class="text-center">
+                  <q-img
+                    v-if="product.imageUrl"
+                    :src="product.imageUrl"
+                    style="height: 150px"
+                    fit="contain"
+                    class="q-mb-md"
+                  />
+                  <div class="text-subtitle1">{{ product.name }}</div>
+                  <div class="text-h6 text-primary q-mt-sm">€{{ product.price }}</div>
+                </q-card-section>
+              </q-card>
+            </div>
+          </div>
+
+          <div class="row justify-center q-mt-md q-gutter-md">
+            <q-btn flat label="Back" icon="arrow_back" @click="currentStep = 2" />
+            <q-btn
+              color="primary"
+              label="Save Selection"
+              size="lg"
+              :disable="!selectedProduct"
+              @click="saveSelection"
+            />
+          </div>
         </div>
       </div>
     </div>
   </q-page>
 </template>
 
+<style scoped>
+.hover-card {
+  transition: all 0.3s ease;
+}
+
+.hover-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.selected-card {
+  border: 2px solid var(--q-primary);
+  box-shadow: 0 4px 12px rgba(var(--q-primary-rgb), 0.3);
+}
+
+.product-card {
+  transition: all 0.2s ease;
+  height: 100%;
+}
+
+.product-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+</style>
+
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useQuasar } from 'quasar';
 import disposablesData from '../data/vape-disposables-scraped.json';
 import liquidsData from '../data/vape-liquids-scraped.json';
+import pouchesData from '../data/pouches-scraped.json';
 
 const $q = useQuasar();
 
@@ -153,42 +138,76 @@ interface Product {
   name: string;
 }
 
-const selectedDisposable = ref<Product | null>(null);
-const selectedLiquid = ref<Product | null>(null);
-const selectedPatch = ref<Product | null>(null);
+const currentStep = ref(1); // Tracks steps
+const selectedProductType = ref<string | null>(null);
+const selectedBrand = ref<string | null>(null);
+const selectedProduct = ref<Product | null>(null);
 
-// Read in disposables data
-const allDisposables = [
-  ...(disposablesData.IVG || []),
-  ...(disposablesData.ELF || []),
-  ...(disposablesData['LOST MARY'] || []),
-  ...(disposablesData.VUSE || []),
-  ...(disposablesData.OTHER || []),
+// Product types
+const productTypes = [
+  {
+    value: 'disposables',
+    label: 'Disposables',
+    description: 'Disposable vapes',
+  },
+  {
+    value: 'liquids',
+    label: 'E-Liquids',
+    description: 'Vape juice & e-liquids',
+  },
+  {
+    value: 'pouches',
+    label: 'Nicotine Pouches',
+    description: 'Tobacco-free pouches',
+  },
 ];
 
-// Read in liquids data
-const allLiquids = [
-  ...(liquidsData.IVG || []),
-  ...(liquidsData.ELF || []),
-  ...(liquidsData['LOST MARY'] || []),
-  ...(liquidsData.LIQUA || []),
-  ...(liquidsData.HALO || []),
-  ...(liquidsData.OTHER || []),
-];
+// Products organized by type and brand
+const productData = {
+  disposables: disposablesData,
+  liquids: liquidsData,
+  pouches: pouchesData,
+};
 
-// Get product options
-const disposableOptions = ref<Product[]>(allDisposables);
-const liquidOptions = ref<Product[]>(allLiquids);
-const pouchOptions = ref<Product[]>([]);
+// Get brands for selected type
+const availableBrands = computed(() => {
+  if (!selectedProductType.value) return [];
+  const data = productData[selectedProductType.value as keyof typeof productData];
+  return Object.keys(data).filter((brand) => data[brand as keyof typeof data].length > 0); // Use only brands with products
+});
+
+// Get selected brand products
+const filteredProducts = computed(() => {
+  if (!selectedProductType.value || !selectedBrand.value) return [];
+  const data = productData[selectedProductType.value as keyof typeof productData]; // Ensure that there are products
+  return data[selectedBrand.value as keyof typeof data] || []; // Return products for selected brand
+});
+
+const selectProductType = (type: string) => {
+  selectedProductType.value = type;
+  selectedBrand.value = null;
+  selectedProduct.value = null;
+  currentStep.value = 2;
+};
+
+const selectBrand = (brand: string) => {
+  selectedBrand.value = brand;
+  selectedProduct.value = null;
+  currentStep.value = 3;
+};
+
+const selectProduct = (product: Product) => {
+  selectedProduct.value = product;
+};
 
 const saveSelection = () => {
   const selection = {
-    disposable: selectedDisposable.value,
-    liquid: selectedLiquid.value,
-    patch: selectedPatch.value,
+    productType: selectedProductType.value,
+    brand: selectedBrand.value,
+    product: selectedProduct.value,
   };
 
-  console.log('Selected products:', selection);
+  console.log('Selected product:', selection);
 
   $q.notify({
     color: 'positive',
