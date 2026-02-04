@@ -30,7 +30,10 @@
 
         <!-- Select Brand -->
         <div v-if="currentStep === 2" class="q-mt-lg">
-          <div class="text-h6 q-mb-md text-center">Which brand do you prefer?</div>
+          <div class="row items-center q-mb-md">
+            <q-btn flat icon="arrow_back" @click="currentStep = 1" />
+            <div class="text-h6 text-center col">Which brand do you prefer?</div>
+          </div>
           <div class="row q-col-gutter-sm justify-center">
             <div class="col-6 col-sm-4 col-md-3" v-for="brand in availableBrands" :key="brand">
               <q-btn
@@ -43,14 +46,14 @@
               />
             </div>
           </div>
-          <div class="row justify-start q-mt-md">
-            <q-btn flat label="Return" icon="arrow_back" @click="currentStep = 1" />
-          </div>
         </div>
 
         <!-- Select Product -->
         <div v-if="currentStep === 3" class="q-mt-lg">
-          <div class="text-h6 q-mb-md text-center">Select your {{ selectedProductType }}</div>
+          <div class="relative-position q-mb-md">
+            <q-btn flat icon="arrow_back" @click="currentStep = 2" class="absolute-left" />
+            <div class="text-h6 text-center">Select your {{ selectedProductType }}</div>
+          </div>
           <div class="text-subtitle2 q-mb-lg text-grey-7 text-center">
             Brand: {{ selectedBrand }}
           </div>
@@ -81,8 +84,7 @@
             </div>
           </div>
 
-          <div class="row justify-center q-mt-md q-gutter-md">
-            <q-btn flat label="Back" icon="arrow_back" @click="currentStep = 2" />
+          <div class="row justify-center q-mt-md">
             <q-btn
               color="primary"
               label="Save Selection"
