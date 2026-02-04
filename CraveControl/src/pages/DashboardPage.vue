@@ -56,9 +56,7 @@
             <q-card class="cursor-pointer" flat bordered>
               <q-card-section class="text-center">
                 <div class="text-h6">Learn more</div>
-                <div class="text-caption text-grey-7 q-mt-sm">
-                  TBA
-                </div>
+                <div class="text-caption text-grey-7 q-mt-sm">TBA</div>
               </q-card-section>
               <q-card-actions align="center">
                 <q-btn color="primary" label="Learn More" unelevated to="/information" />
@@ -72,7 +70,4 @@
 </template>
 
 <script setup lang="ts">
-//mport { useQuasar } from 'quasar';
-
-//const $q = useQuasar();
 </script>
