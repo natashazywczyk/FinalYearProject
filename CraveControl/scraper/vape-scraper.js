@@ -89,7 +89,7 @@ async function scrapeVapeProducts(category = 'disposables') {
     // Wait for images to load
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    // Extract product data from the vproducts displayed, not specific flavours
+    // Extract product data from the products displayed, not specific flavours
     const products = await page.evaluate(() => {
       const results = [];
       const seen = new Set();
