@@ -25,6 +25,15 @@
             :rules="[(val) => (val && val.length > 0) || 'Password required']"
           />
 
+          <q-select
+            filled
+            v-model="ageGroup"
+            label="Age Group"
+            :options="ageGroupOptions"
+            lazy-rules
+            :rules="[(val) => !!val || 'Age group required']"
+          />
+
           <div>
             <q-btn
               label="Sign Up"
@@ -51,7 +60,10 @@ const router = useRouter();
 
 const email = ref('');
 const password = ref('');
+const ageGroup = ref<string | null>(null);
 const loading = ref(false);
+
+const ageGroupOptions = ['Under 18', '18-25', '25-30', '31-40', '41-50', '60+'];
 
 // Handle user sign up, authenticate the account when user created
 const handleSignup = async () => {
@@ -67,9 +79,12 @@ const handleSignup = async () => {
 
     // Create profile in account table
     if (data.user) {
-      const { error: profileError } = await supabase
-        .from('account')
-        .insert([{ user_id: data.user.id }]);
+      const { error: profileError } = await supabase.from('account').insert([
+        {
+          user_id: data.user.id,
+          age_group: ageGroup.value,
+        },
+      ]);
 
       if (profileError) {
         console.error('Profile creation error:', profileError);
