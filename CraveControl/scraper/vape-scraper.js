@@ -1,10 +1,27 @@
 import puppeteer from 'puppeteer';
 import fs from 'fs';
 
-const brands = ['IVG', 'ELF', 'LOST MARY', 'VUSE'];
+const BRAND_CONFIG = {
+  disposables: {
+    brands: ['IVG', 'ELF', 'LOST MARY', 'VUSE'],
+    url: 'https://ecirette.ie/collections/disposables',
+    outputFile: '../src/data/vape-disposables-scraped.json',
+  },
+  liquids: {
+    brands: ['IVG', 'ELF', 'LOST MARY', 'LIQUA', 'HALO'],
+    url: 'https://ecirette.ie/collections/e-liquids',
+    outputFile: '../src/data/vape-liquids-scraped.json',
+  },
+};
 
-// Function to scrape disposable vape products from website
-async function scrapeVapeProducts() {
+// Function to scrape vape products from website
+async function scrapeVapeProducts(category = 'disposables') {
+  const config = BRAND_CONFIG[category];
+  if (!config) {
+    throw new Error(`Unknown category: ${category}`);
+  }
+
+  console.log(`\n=== Scraping ${category.toUpperCase()} ===`);
   console.log('Launching browser...');
   const browser = await puppeteer.launch({
     headless: true,
@@ -20,7 +37,7 @@ async function scrapeVapeProducts() {
   );
 
   console.log('Navigating to website...');
-  await page.goto('https://ecirette.ie/collections/disposables', {
+  await page.goto(config.url, {
     waitUntil: 'networkidle2',
     timeout: 30000,
   });
@@ -98,7 +115,11 @@ async function scrapeVapeProducts() {
 
           // Scrape image URL
           const imgEl = card.querySelector('img');
-          const imageUrl = imgEl?.src || imgEl?.getAttribute('data-src') || imgEl?.getAttribute('srcset')?.split(' ')[0] ||'';
+          const imageUrl =
+            imgEl?.src ||
+            imgEl?.getAttribute('data-src') ||
+            imgEl?.getAttribute('srcset')?.split(' ')[0] ||
+            '';
 
           // Scrape price
           const priceEl = card.querySelector('.price, [class*="price"]');
@@ -109,7 +130,13 @@ async function scrapeVapeProducts() {
           name = name.replace(/\s+/g, ' ').trim();
 
           // Only add if we have name and image, image is not a warning
-          if (name && name.length > 5 && imageUrl &&!imageUrl.includes('Nicotine_Warning') && !imageUrl.includes('Mega_Menu')) {
+          if (
+            name &&
+            name.length > 5 &&
+            imageUrl &&
+            !imageUrl.includes('Nicotine_Warning') &&
+            !imageUrl.includes('Mega_Menu')
+          ) {
             results.push({ name, imageUrl, price });
           }
         } catch (_error) {
@@ -175,26 +202,42 @@ async function scrapeVapeProducts() {
   console.log(`Found ${products.length} products`);
 
   // Categorize by brand
-  const categorized = {
-    IVG: [],
-    ELF: [],
-    'LOST MARY': [], // String with space
-    VUSE: [],
-    OTHER: [],
-  };
+  const categorized = {};
+
+  // Initialize categories based on config
+  config.brands.forEach((brand) => {
+    categorized[brand] = [];
+  });
+  categorized.OTHER = [];
 
   products.forEach((product) => {
     let assigned = false;
     const upperName = product.name.toUpperCase();
 
     // Check for ELFBAR and ELF together as same brand
-    if (upperName.includes('ELFBAR') || upperName.includes('ELF BAR') || upperName.includes('ELF')) {
-      categorized.ELF.push(product);
-      assigned = true;
+    if (
+      upperName.includes('ELFBAR') ||
+      upperName.includes('ELF BAR') ||
+      upperName.includes('ELF')
+    ) {
+      if (categorized.ELF) {
+        categorized.ELF.push(product);
+        assigned = true;
+      }
+    } else if (upperName.includes('LIQUA')) {
+      if (categorized.LIQUA) {
+        categorized.LIQUA.push(product);
+        assigned = true;
+      }
+    } else if (upperName.includes('HALO') || upperName.includes('PARTNERS')) {
+      if (categorized.HALO) {
+        categorized.HALO.push(product);
+        assigned = true;
+      }
     } else {
       // Check other brands
-      for (const brand of brands) {
-        if (brand !== 'ELF' && upperName.includes(brand)) {
+      for (const brand of config.brands) {
+        if (brand !== 'ELF' && brand !== 'LIQUA' && brand !== 'HALO' && upperName.includes(brand)) {
           categorized[brand].push(product);
           assigned = true;
           break;
@@ -208,23 +251,22 @@ async function scrapeVapeProducts() {
   });
 
   // Save to JSON file
-  const outputPath = '../src/data/vape-products-scraped.json';
-  fs.writeFileSync(outputPath, JSON.stringify(categorized, null, 2));
+  fs.writeFileSync(config.outputFile, JSON.stringify(categorized, null, 2));
 
   console.log('\n--- Scraping Results ---');
-  console.log(`IVG: ${categorized.IVG.length} products`);
-  console.log(`ELF: ${categorized.ELF.length} products`);
-  console.log(`LOST MARY: ${categorized['LOST MARY'].length} products`);
-  console.log(`VUSE: ${categorized.VUSE.length} products`);
+  config.brands.forEach((brand) => {
+    console.log(`${brand}: ${categorized[brand]?.length || 0} products`);
+  });
   console.log(`OTHER: ${categorized.OTHER.length} products`);
-  console.log(`\nData saved to: ${outputPath}`);
+  console.log(`\nData saved to: ${config.outputFile}`);
 
   return categorized;
 }
 
-scrapeVapeProducts()
+// Run scraper for both disposables and liquids
+Promise.all([scrapeVapeProducts('disposables'), scrapeVapeProducts('liquids')])
   .then(() => {
-    console.log('\nScraping completed successfully!');
+    console.log('\nScraping done.');
     process.exit(0);
   })
   .catch((error) => {
