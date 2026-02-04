@@ -25,14 +25,53 @@ export default defineRouter(function () {
 
   // Navigation guard to redirect authenticated users from index page
   Router.beforeEach(async (to, from, next) => {
+    // Skip guard for auth callback page, handles auth internally
+    if (to.path === '/auth-callback') {
+      next();
+      return;
+    }
+
     const { data: { session } } = await supabase.auth.getSession();
 
-    // If user is logged in and trying to access index, login, or signup pages
-    if (session && (to.path === '/' || to.path === '/login' || to.path === '/signup')) {
-      next('/dashboard');
-    } else {
-      next();
+    const publicPages = ['/', '/login', '/signup'];
+    const isPublicPage = publicPages.includes(to.path);
+    const isCompleteProfilePage = to.path === '/complete-profile';
+
+    // Not logged in
+    if (!session) {
+      // Allow access to public pages and complete-profile
+      if (isPublicPage || isCompleteProfilePage) {
+        next();
+      } else {
+        // Redirect to login for protected pages
+        next('/login');
+      }
+      return;
     }
+
+    // After login, check if profile has age group
+    const { data: profile } = await supabase
+      .from('account')
+      .select('age_group')
+      .eq('user_id', session.user.id)
+      .maybeSingle();
+
+    const hasAgeGroup = profile?.age_group;
+
+    // If no age group, ensure its entered
+    if (!hasAgeGroup && !isCompleteProfilePage) {
+      next('/complete-profile');
+      return;
+    }
+
+    // If has age group and trying to access other pages
+    if (hasAgeGroup && (isPublicPage || isCompleteProfilePage)) {
+      next('/dashboard');
+      return;
+    }
+
+    // Allow navigation
+    next();
   });
 
   return Router;
