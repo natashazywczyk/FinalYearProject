@@ -2,7 +2,6 @@
   <q-page class="q-pa-md">
     <div class="row justify-center">
       <div class="col-12 col-md-10">
-
         <q-btn flat icon="arrow_back" label="Back" to="/dashboard" class="q-mb-md" />
 
         <div class="text-h4 q-mb-md">Nicotine Product Selection</div>
@@ -25,14 +24,14 @@
             >
               <template v-slot:option="scope">
                 <q-item v-bind="scope.itemProps">
-                  <q-item-section avatar v-if="scope.opt.picture">
+                  <q-item-section avatar v-if="scope.opt.imageUrl">
                     <q-avatar rounded>
-                      <img :src="getPictureUrl(scope.opt.picture)" />
+                      <img :src="scope.opt.imageUrl" />
                     </q-avatar>
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>{{ scope.opt.name }}</q-item-label>
-                    <q-item-label caption>{{ scope.opt.price }}</q-item-label>
+                    <q-item-label caption>€{{ scope.opt.price }}</q-item-label>
                   </q-item-section>
                 </q-item>
               </template>
@@ -44,13 +43,13 @@
               <q-card>
                 <q-card-section class="text-center">
                   <img
-                    v-if="selectedDisposable.picture"
-                    :src="getPictureUrl(selectedDisposable.picture)"
-                    style="max-width: 150px; max-height: 150px;"
+                    v-if="selectedDisposable.imageUrl"
+                    :src="selectedDisposable.imageUrl"
+                    style="max-width: 150px; max-height: 150px"
                     class="q-mb-md"
                   />
                   <div class="text-subtitle1">{{ selectedDisposable.name }}</div>
-                  <div class="text-h6 text-primary q-mt-sm">{{ selectedDisposable.price }}</div>
+                  <div class="text-h6 text-primary q-mt-sm">€{{ selectedDisposable.price }}</div>
                 </q-card-section>
               </q-card>
             </div>
@@ -122,12 +121,12 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useQuasar } from 'quasar';
-import vapeProductsData from '../data/demo-vape-product-scrape.json';
+import vapeProductsData from '../data/vape-products-scraped.json';
 
 const $q = useQuasar();
 
 interface Product {
-  picture: string;
+  imageUrl: string;
   price: string;
   name: string;
 }
@@ -136,44 +135,27 @@ const selectedDisposable = ref<Product | null>(null);
 const selectedLiquid = ref<Product | null>(null);
 const selectedPatch = ref<Product | null>(null);
 
-// Read in vape product json
-const processedProducts = vapeProductsData
-  .filter((product, index, self) =>
-    index === self.findIndex(p => p.name === product.name)
-  )
-  .map(product => ({
-    ...product,
-    picture: product.picture.startsWith('[')
-      ? JSON.parse(product.picture)[0]
-      : product.picture
-  }));
+// Read in vape product json and combine all brands into one array
+const allProducts = [
+  ...vapeProductsData.IVG,
+  ...vapeProductsData.ELF,
+  ...vapeProductsData['LOST MARY'],
+  ...vapeProductsData.VUSE,
+  ...vapeProductsData.OTHER,
+];
 
 // Get disposable products from disposable vape JSON
-const disposableOptions = ref<Product[]>(processedProducts);
+const disposableOptions = ref<Product[]>(allProducts);
 
 // Dummy arrays for other dropdowns
 const liquidOptions = ref<Product[]>([]);
 const patchOptions = ref<Product[]>([]);
 
-// Function to extract image URL
-const getPictureUrl = (picture: string): string => {
-  if (picture.startsWith('["') && picture.endsWith('"]')) {
-    return JSON.parse(picture)[0];
-  } else if (picture.startsWith('[') && picture.endsWith(']')) {
-    try {
-      return JSON.parse(picture)[0];
-    } catch {
-      return picture;
-    }
-  }
-  return picture;
-};
-
 const saveSelection = () => {
   const selection = {
     disposable: selectedDisposable.value,
     liquid: selectedLiquid.value,
-    patch: selectedPatch.value
+    patch: selectedPatch.value,
   };
 
   console.log('Selected products:', selection);
@@ -182,8 +164,7 @@ const saveSelection = () => {
     color: 'positive',
     message: 'Product selection saved successfully!',
     icon: 'check_circle',
-    position: 'top'
+    position: 'top',
   });
-
 };
 </script>
