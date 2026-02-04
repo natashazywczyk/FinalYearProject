@@ -23,7 +23,7 @@ onMounted(async () => {
     console.log('OAuth callback detected, extracting tokens');
 
     // Read in the hash to extract tokens
-    const tokensPart = fullHash.split('#').find(part => part.includes('access_token'));
+    const tokensPart = fullHash.split('#').find((part) => part.includes('access_token'));
     if (!tokensPart) {
       console.error('Could not parse tokens from hash');
       window.location.href = '/#/login';
