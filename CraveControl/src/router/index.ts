@@ -8,7 +8,6 @@ import {
 import routes from './routes';
 import { supabase } from 'src/boot/supabase';
 
-
 export default defineRouter(function () {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
@@ -31,7 +30,9 @@ export default defineRouter(function () {
       return;
     }
 
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
 
     const publicPages = ['/', '/login', '/signup'];
     const isPublicPage = publicPages.includes(to.path);
