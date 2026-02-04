@@ -3,9 +3,7 @@
     <q-card class="q-pa-md" style="width: 400px; max-width: 90vw">
       <q-card-section class="text-center">
         <div class="text-h6">Complete Your Profile</div>
-        <div class="text-caption text-grey-7 q-mt-sm">
-          Select your age group to continue
-        </div>
+        <div class="text-caption text-grey-7 q-mt-sm">Select your age group to continue</div>
       </q-card-section>
 
       <q-card-section v-if="checkingSession" class="text-center">
@@ -54,7 +52,9 @@ const ageGroupOptions = ['Under 18', '18-25', '25-30', '31-40', '41-50', '60+'];
 // Check for existing session on mount
 onMounted(async () => {
   try {
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
 
     if (!session) {
       $q.notify({
@@ -148,5 +148,4 @@ const saveAgeGroup = async () => {
     loading.value = false;
   }
 };
-
 </script>
