@@ -36,7 +36,7 @@
                 </q-item>
               </template>
               <template v-slot:selected-item="scope">
-                <div class="ellipsis">{{ scope.opt.name }}</div>
+                <div>{{ scope.opt.name }}</div>
               </template>
             </q-select>
             <div v-if="selectedDisposable" class="q-mt-md">
@@ -67,13 +67,34 @@
               options-dense
               behavior="menu"
             >
-              <!-- Fill with products from json for nicotine liquids -->
+              <template v-slot:option="scope">
+                <q-item v-bind="scope.itemProps">
+                  <q-item-section avatar v-if="scope.opt.imageUrl">
+                    <q-avatar rounded>
+                      <img :src="scope.opt.imageUrl" />
+                    </q-avatar>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>{{ scope.opt.name }}</q-item-label>
+                    <q-item-label caption>€{{ scope.opt.price }}</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </template>
+              <template v-slot:selected-item="scope">
+                <div>{{ scope.opt.name }}</div>
+              </template>
             </q-select>
             <div v-if="selectedLiquid" class="q-mt-md">
               <q-card>
                 <q-card-section class="text-center">
+                  <img
+                    v-if="selectedLiquid.imageUrl"
+                    :src="selectedLiquid.imageUrl"
+                    style="max-width: 150px; max-height: 150px"
+                    class="q-mb-md"
+                  />
                   <div class="text-subtitle1">{{ selectedLiquid.name }}</div>
-                  <div class="text-h6 text-primary q-mt-sm">{{ selectedLiquid.price }}</div>
+                  <div class="text-h6 text-primary q-mt-sm">€{{ selectedLiquid.price }}</div>
                 </q-card-section>
               </q-card>
             </div>
@@ -82,7 +103,7 @@
           <div class="col-12 col-md-4">
             <q-select
               v-model="selectedPatch"
-              :options="patchOptions"
+              :options="pouchOptions"
               label="Nicotine Patches"
               outlined
               clearable
@@ -121,7 +142,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useQuasar } from 'quasar';
-import vapeProductsData from '../data/vape-products-scraped.json';
+import disposablesData from '../data/vape-disposables-scraped.json';
+import liquidsData from '../data/vape-liquids-scraped.json';
 
 const $q = useQuasar();
 
@@ -135,21 +157,29 @@ const selectedDisposable = ref<Product | null>(null);
 const selectedLiquid = ref<Product | null>(null);
 const selectedPatch = ref<Product | null>(null);
 
-// Read in vape product json and combine all brands into one array
-const allProducts = [
-  ...vapeProductsData.IVG,
-  ...vapeProductsData.ELF,
-  ...vapeProductsData['LOST MARY'],
-  ...vapeProductsData.VUSE,
-  ...vapeProductsData.OTHER,
+// Read in disposables data
+const allDisposables = [
+  ...(disposablesData.IVG || []),
+  ...(disposablesData.ELF || []),
+  ...(disposablesData['LOST MARY'] || []),
+  ...(disposablesData.VUSE || []),
+  ...(disposablesData.OTHER || []),
 ];
 
-// Get disposable products from disposable vape JSON
-const disposableOptions = ref<Product[]>(allProducts);
+// Read in liquids data
+const allLiquids = [
+  ...(liquidsData.IVG || []),
+  ...(liquidsData.ELF || []),
+  ...(liquidsData['LOST MARY'] || []),
+  ...(liquidsData.LIQUA || []),
+  ...(liquidsData.HALO || []),
+  ...(liquidsData.OTHER || []),
+];
 
-// Dummy arrays for other dropdowns
-const liquidOptions = ref<Product[]>([]);
-const patchOptions = ref<Product[]>([]);
+// Get product options
+const disposableOptions = ref<Product[]>(allDisposables);
+const liquidOptions = ref<Product[]>(allLiquids);
+const pouchOptions = ref<Product[]>([]);
 
 const saveSelection = () => {
   const selection = {
