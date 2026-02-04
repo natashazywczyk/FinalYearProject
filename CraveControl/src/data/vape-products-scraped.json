@@ -1,0 +1,87 @@
+{
+  "IVG": [
+    {
+      "name": "IVG Bar Plus Disposable Kit",
+      "imageUrl": "https://ecirette.ie/cdn/shop/products/Cover_c7ce8fdd-5ad1-43e0-92d1-9e72e423ff6b.jpg?v=1645891570&width=2040",
+      "price": "2.99"
+    },
+    {
+      "name": "IVG 2400 Disposable Vape Kit",
+      "imageUrl": "https://ecirette.ie/cdn/shop/files/Cover_ffcf6137-066f-4f6d-aec5-9688ff7f3e2e.jpg?v=1699935430&width=2040",
+      "price": "20.00"
+    },
+    {
+      "name": "IVG Smart 5500 Disposable Kit",
+      "imageUrl": "https://ecirette.ie/cdn/shop/files/BlueRAspberryIce_ff8a3e30-f32e-4aab-9289-18286a8a7785.jpg?v=1728399124&width=2040",
+      "price": "15.00"
+    },
+    {
+      "name": "IVG PRO 12K Kit",
+      "imageUrl": "https://ecirette.ie/cdn/shop/files/IVGPRO12KBRI.webp?v=1758812998&width=2400",
+      "price": "20.00"
+    },
+    {
+      "name": "IVG Smart Max Kit",
+      "imageUrl": "https://ecirette.ie/cdn/shop/files/SMART_MAX_Device_Thumbnail_Blue_Sour_Raspberry_85eaa448-4670-4daa-9ae6-29d4656f17d6.webp?v=1768322708&width=1000",
+      "price": "20.00"
+    }
+  ],
+  "ELF": [
+    {
+      "name": "ELF Bar Lost Mary QM600 Disposable Vape",
+      "imageUrl": "https://ecirette.ie/cdn/shop/products/Cover_b5ffaa3f-e2b2-422c-8a3f-6f2fa3e34036.jpg?v=1685102446&width=2040",
+      "price": "7.99"
+    },
+    {
+      "name": "ELF Bar Lost Mary BM600 Disposable Vape",
+      "imageUrl": "https://ecirette.ie/cdn/shop/products/Cover_6e396ef9-587a-4fa0-8de1-d3d594c41c54.jpg?v=1666186628&width=2040",
+      "price": "7.99"
+    },
+    {
+      "name": "ELF Bar",
+      "imageUrl": "https://ecirette.ie/cdn/shop/products/Cover_e403d00e-0c17-4aa2-b5c9-c80344642793.jpg?v=1664450179&width=2040",
+      "price": "7.99"
+    },
+    {
+      "name": "ELFBAR AF5000 Disposable Vape Kit",
+      "imageUrl": "https://ecirette.ie/cdn/shop/files/ApplePear.jpg?v=1737027691&width=2040",
+      "price": "22.50"
+    }
+  ],
+  "LOST MARY": [
+    {
+      "name": "Lost Mary BM6000 Disposable Vape Kit",
+      "imageUrl": "https://ecirette.ie/cdn/shop/files/Cover_0455c4de-dcab-44b7-97b1-8a0028f110c8.jpg?v=1734046301&width=2040",
+      "price": "23.50"
+    }
+  ],
+  "VUSE": [
+    {
+      "name": "Vuse GO 800 Disposable Vape",
+      "imageUrl": "https://ecirette.ie/cdn/shop/files/Cover_0431eda4-d5ef-4b86-816e-38d1e39442d8.jpg?v=1699035488&width=2040",
+      "price": "4.50"
+    },
+    {
+      "name": "Vuse GO 700 Disposable Vape",
+      "imageUrl": "https://ecirette.ie/cdn/shop/files/Cover_e391b6b2-6235-45ac-9a31-5ada506b87bc.jpg?v=1699550924&width=2040",
+      "price": "4.50"
+    }
+  ],
+  "OTHER": [
+    {
+      "name": "Aspire R1 Disposable Kit",
+      "imageUrl": "https://ecirette.ie/cdn/shop/products/Pearl_ef21e0e4-85c2-425e-b616-867bbb8492d2.jpg?v=1650376193&width=2040",
+      "price": "8.99"
+    },
+    {
+      "name": "Titan 10K Disposable Vape Kit",
+      "imageUrl": "https://ecirette.ie/cdn/shop/files/BananaIce_52af4f28-be40-47ec-a4a6-b4416f270a80.jpg?v=1733181173&width=2040",
+      "price": "24.80"
+    },
+    {
+      "name": "Vaporesso COSS Click Disposable Kit",
+      "imageUrl": "https://ecirette.ie/cdn/shop/files/BananaIce_5ee6857a-971d-4cfc-9c80-e61f6b84aa2e.jpg?v=1722409116&width=2040",
+      "price": "12.10"
+    }
+  ]
+}
