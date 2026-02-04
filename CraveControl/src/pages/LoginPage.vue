@@ -35,6 +35,20 @@
             />
           </div>
         </q-form>
+
+        <q-separator class="q-my-md" />
+
+        <div class="text-center q-mb-sm text-grey-7">Or</div>
+
+        <q-btn
+          outline
+          color="primary"
+          icon="img:https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+          label="Sign in with Google"
+          class="full-width"
+          @click="signInWithGoogle"
+          :loading="googleLoading"
+        />
       </q-card-section>
     </q-card>
   </q-page>
@@ -52,6 +66,29 @@ const router = useRouter();
 const email = ref('');
 const password = ref('');
 const loading = ref(false);
+const googleLoading = ref(false);
+
+// Handle Google OAuth sign in
+const signInWithGoogle = async () => {
+  googleLoading.value = true;
+  try {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/#/auth-callback`,
+      },
+    });
+
+    if (error) throw error;
+  } catch (error) {
+    const err = error as Error;
+    $q.notify({
+      type: 'negative',
+      message: err.message || 'Error signing in with Google',
+    });
+    googleLoading.value = false;
+  }
+};
 
 // Handle user log in, with previously created account
 const handleLogin = async () => {
