@@ -1,0 +1,189 @@
+{
+  "IVG": [
+    {
+      "name": "IVG Nicotine Salt E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/products/cover_8df9852e-04ea-4e07-8ac8-dd540605b91c.jpg?v=1615386885&width=2040",
+      "price": "11.50"
+    },
+    {
+      "name": "IVG 50/50 Fruit Range E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/products/Cover_913c54b0-b345-453c-a9e6-d46fbb64f5f1.jpg?v=1655405435&width=2040",
+      "price": "11.00"
+    },
+    {
+      "name": "IVG Beyond Nicotine Salt E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/products/Cover_c645948b-fac4-4819-ae17-9d50e65b765c.jpg?v=1650469990&width=2040",
+      "price": "8.15"
+    },
+    {
+      "name": "IVG 50/50 Iced Range E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/products/Cover_fe56b9f1-9f1c-4aa8-9123-caafebf6e4dc.jpg?v=1655405344&width=2040",
+      "price": "11.00"
+    },
+    {
+      "name": "IVG 50/50 Drinks Range E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/products/Cover_a659a6a3-cc62-42c5-b978-07a21ee3b3c0.jpg?v=1655405515&width=2040",
+      "price": "11.00"
+    },
+    {
+      "name": "IVG 50/50 Dessert Range E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/products/Cover_0064ce3b-3de9-4da3-9121-31101dd252b3.jpg?v=1655405348&width=2040",
+      "price": "11.00"
+    },
+    {
+      "name": "IVG 50/50 Tobacco Range E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/products/Cover_c1855ea1-eaa0-463c-9623-868f2c07d66c.jpg?v=1655405418&width=2040",
+      "price": "11.00"
+    }
+  ],
+  "ELF": [
+    {
+      "name": "ELFLIQ by ELFBAR Nicotine Salt E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/files/Cover_6310e7fd-3b91-4e9e-9419-16b157087aaf.jpg?v=1699550919&width=2040",
+      "price": "11.00"
+    }
+  ],
+  "LOST MARY": [
+    {
+      "name": "MARYLIQ by Lost Mary Nicotine Salt E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/files/Cover_9dbeb4f9-4617-4595-a9d0-c9cbdeedfe11.jpg?v=1707923114&width=2040",
+      "price": "11.50"
+    }
+  ],
+  "LIQUA": [
+    {
+      "name": "Liqua Tobacco Series E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/products/TobaccoSeries.jpg?v=1672937600&width=2040",
+      "price": "11.00"
+    },
+    {
+      "name": "Liqua Fruit & Berry Series E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/products/FruitandBerrySeries.jpg?v=1672937588&width=2040",
+      "price": "11.00"
+    },
+    {
+      "name": "Liqua Intense Series E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/products/IntenseSeries.jpg?v=1672937605&width=2040",
+      "price": "11.00"
+    },
+    {
+      "name": "Liqua Dessert Series E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/products/DessertSeries.jpg?v=1672937596&width=2040",
+      "price": "11.00"
+    },
+    {
+      "name": "Liqua Mix&Go Short Fill E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/products/MixnGo.jpg?v=1672937602&width=2040",
+      "price": "44.00"
+    },
+    {
+      "name": "Liqua Drinks Series E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/products/DrinksSeries.jpg?v=1672937593&width=2040",
+      "price": "11.00"
+    },
+    {
+      "name": "Liqua Nicotine Salt E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/files/Cover_a604fd58-76bf-49d7-a7c6-def8d0e5a2e3.jpg?v=1732065303&width=2040",
+      "price": "9.60"
+    },
+    {
+      "name": "Ritchy Nicotine Salt E-Liquid by Liqua",
+      "imageUrl": "https://ecirette.ie/cdn/shop/files/Cover_9820fa06-3e99-460a-add5-7d191f3da595.jpg?v=1720653305&width=2040",
+      "price": "9.60"
+    },
+    {
+      "name": "Aramax Nicotine Salt E-Liquid by Liqua",
+      "imageUrl": "https://ecirette.ie/cdn/shop/files/Cover_d3cd7cee-448d-4fb9-bbbc-0771ca13a14c.jpg?v=1720653299&width=2040",
+      "price": "9.50"
+    }
+  ],
+  "HALO": [
+    {
+      "name": "Halo E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/products/cover_5c72868e-0cab-44bf-846e-3d5674b39e92.jpg?v=1615387088&width=2040",
+      "price": "10.50"
+    },
+    {
+      "name": "Halo Short Fill E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/files/Cover_75ce6cd8-bddd-40d6-998c-a1eab082cdb1.jpg?v=1752761170&width=2040",
+      "price": "40.50"
+    },
+    {
+      "name": "Halo Ultra Nicotine Salt E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/products/cover_80dc131d-3a07-4474-9305-c1061d50b6ab.jpg?v=1615386958&width=2040",
+      "price": "11.50"
+    },
+    {
+      "name": "Halo Black Short Fill E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/products/Cover_022216c9-ffe3-4bee-a42e-dd99d4dd67b3.jpg?v=1647377830&width=2040",
+      "price": "48.70"
+    }
+  ],
+  "OTHER": [
+    {
+      "name": "Cirro E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/products/CIRROCoverImage.jpg?v=1615386935&width=2040",
+      "price": "11.20"
+    },
+    {
+      "name": "Aramax E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/products/Aramaxtest.png?v=1615386857&width=2040",
+      "price": "9.50"
+    },
+    {
+      "name": "King's Dew E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/products/cover_47a7f417-5129-4d7c-9305-bd40630b52f8.jpg?v=1615386946&width=2040",
+      "price": "10.50"
+    },
+    {
+      "name": "Bar Juice 5000 Nicotine Salt E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/files/1Cover.jpg?v=1721249744&width=2040",
+      "price": "10.50"
+    },
+    {
+      "name": "Yeti Nicotine Salt E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/products/cover_799aa673-d981-4be4-b119-563e82cf60bc.jpg?v=1615387027&width=2040",
+      "price": "11.00"
+    },
+    {
+      "name": "PURE Short Fill E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/products/cover_512a7223-0ecd-4d28-8d5d-09195cf2e07f.jpg?v=1615387046&width=2040",
+      "price": "40.50"
+    },
+    {
+      "name": "Slushie Bar Salt Nicotine Salt E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/files/cover.jpg?v=1712636557&width=2040",
+      "price": "8.15"
+    },
+    {
+      "name": "Kilo Short Fill E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/products/cover_37c141f3-43e5-4fd6-9977-57cc78c5be8f.jpg?v=1615386767&width=2040",
+      "price": "82.50"
+    },
+    {
+      "name": "Drifter Bar Salt E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/files/Cover_3e37b188-0ce3-4eb9-91b6-10b24fd6fc11.jpg?v=1707818963&width=2040",
+      "price": "11.00"
+    },
+    {
+      "name": "OX Passion Nicotine Salt E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/files/Cover_4d9ab1a0-6bb0-4b11-a23f-dfc67409b49e.jpg?v=1724382260&width=2040",
+      "price": "10.60"
+    },
+    {
+      "name": "Yeti Summit Series Nicotine Salt E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/files/Cover_5ebab8c2-8117-43a8-b9a4-56618b2a6d46.jpg?v=1720806930&width=2040",
+      "price": "11.00"
+    },
+    {
+      "name": "Gold Bar Nicotine Salt E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/files/Cover_9f96bc1c-36ce-4bde-b60e-153948e7efa4.jpg?v=1733181184&width=2040",
+      "price": "9.00"
+    },
+    {
+      "name": "Yeti Summit Series Short Fill E-Liquid",
+      "imageUrl": "https://ecirette.ie/cdn/shop/files/WEBSITEBANNER_1080x1080px_-2025-07-07T135840.996.webp?v=1751904075&width=1080",
+      "price": "79.50"
+    }
+  ]
+}
