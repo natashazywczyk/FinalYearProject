@@ -44,6 +44,20 @@
             />
           </div>
         </q-form>
+
+        <q-separator class="q-my-md" />
+
+        <div class="text-center q-mb-sm text-grey-7">Or sign up with</div>
+
+        <q-btn
+          outline
+          color="primary"
+          icon="img:https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+          label="Sign up with Google"
+          class="full-width"
+          @click="signUpWithGoogle"
+          :loading="googleLoading"
+        />
       </q-card-section>
     </q-card>
   </q-page>
@@ -62,8 +76,31 @@ const email = ref('');
 const password = ref('');
 const ageGroup = ref<string | null>(null);
 const loading = ref(false);
+const googleLoading = ref(false);
 
 const ageGroupOptions = ['Under 18', '18-25', '25-30', '31-40', '41-50', '60+'];
+
+// Handle Google OAuth sign up
+const signUpWithGoogle = async () => {
+  googleLoading.value = true;
+  try {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/#/complete-profile`,
+      },
+    });
+
+    if (error) throw error;
+  } catch (error) {
+    const err = error as Error;
+    $q.notify({
+      type: 'negative',
+      message: err.message || 'Error signing up with Google',
+    });
+    googleLoading.value = false;
+  }
+};
 
 // Handle user sign up, authenticate the account when user created
 const handleSignup = async () => {
