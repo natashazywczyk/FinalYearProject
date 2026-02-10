@@ -293,6 +293,9 @@ const submitCravingLevel = async () => {
     return;
   }
 
+  // Show chart with the new entry
+  await updateChartData();
+
   // Show thank you message with slight delay
   setTimeout(() => {
     showSubmitted.value = true;
