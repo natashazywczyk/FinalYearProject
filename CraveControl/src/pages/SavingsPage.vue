@@ -114,16 +114,29 @@ const purchaseAnswer = async (answer: boolean) => {
 
       // If they didn't purchase, add to their savings
       if (!answer) {
-        const { data: account } = await supabase
+        const { data: account, error: fetchError } = await supabase
           .from('account')
           .select('total_savings')
           .eq('user_id', user.id)
           .single();
 
-        const currentSavings = account?.total_savings || 0;
+        if (fetchError) {
+          console.error('Error fetching account:', fetchError);
+          return;
+        }
+
+        const currentSavings = account?.total_savings ?? 0;
         const newSavings = currentSavings + productPrice.value;
 
-        await supabase.from('account').update({ total_savings: newSavings }).eq('user_id', user.id);
+        const { error: updateError } = await supabase
+          .from('account')
+          .update({ total_savings: newSavings })
+          .eq('user_id', user.id);
+
+        if (updateError) {
+          console.error('Error updating savings:', updateError);
+          return;
+        }
 
         totalSavings.value = newSavings;
       } else {
@@ -184,8 +197,14 @@ onMounted(async () => {
     hasProduct.value = !!account?.product_name;
 
     if (account?.product_price) {
-      // Remove euro symbol, convert to number
-      productPrice.value = parseFloat(account.product_price.replace(/[^0-9.]/g, ''));
+      // Handle both string and number formats
+      if (typeof account.product_price === 'string') {
+        // Replace comma with full stop for correct saving calculation
+        const normalized = account.product_price.replace(',', '.').replace(/[^0-9.]/g, '');
+        productPrice.value = parseFloat(normalized);
+      } else {
+        productPrice.value = account.product_price;
+      }
     }
 
     // Set current savings from database
