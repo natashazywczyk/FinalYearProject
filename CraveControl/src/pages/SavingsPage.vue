@@ -9,13 +9,13 @@
           Track how much money you've saved by resisting your cravings
         </div>
 
-        <div v-if="!hasProduct" class="q-mb-md">
+        <div v-if="!hasProduct && !isLoading" class="q-mb-md">
           <span>Make sure you have a product selected</span>
           <q-btn label="Select Product" to="/product-selection" color="primary" class="q-ml-sm" />
         </div>
 
         <!-- Question Screen -->
-        <div v-if="!hasAnswered && hasProduct" class="q-mt-xl">
+        <div v-if="!hasAnswered && hasProduct && !isLoading" class="q-mt-xl">
           <q-card flat bordered class="q-pa-lg">
             <q-card-section class="text-center">
               <div class="text-h5 q-mb-lg">Did you buy your nicotine product today?</div>
@@ -68,7 +68,7 @@
 
         <!-- Loading  -->
         <div
-          v-if="!imageLoaded && hasAnswered"
+          v-if="isLoading || (!imageLoaded && hasAnswered)"
           class="row justify-center items-center"
           style="min-height: 400px"
         >
@@ -89,8 +89,7 @@ const totalSavings = ref(0);
 const hasProduct = ref(false);
 const hasAnswered = ref(false);
 const boughtProduct = ref(false);
-const productPrice = ref(0);
-
+const productPrice = ref(0);const isLoading = ref(true);
 const purchaseAnswer = async (answer: boolean) => {
   boughtProduct.value = answer;
   hasAnswered.value = true;
@@ -211,8 +210,12 @@ onMounted(async () => {
       img.src = '/images/savings-pot.png';
       img.onload = () => {
         imageLoaded.value = true;
+        isLoading.value = false;
         animateSavings();
       };
+    } else {
+      // If user hasn't answered today, show question
+      isLoading.value = false;
     }
   }
 });
