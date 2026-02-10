@@ -140,6 +140,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useQuasar } from 'quasar';
+import { supabase } from '../boot/supabase';
 import disposablesData from '../data/vape-disposables-scraped.json';
 import liquidsData from '../data/vape-liquids-scraped.json';
 import pouchesData from '../data/pouches-scraped.json';
@@ -214,20 +215,43 @@ const selectProduct = (product: Product) => {
   selectedProduct.value = product;
 };
 
-const saveSelection = () => {
-  const selection = {
-    productType: selectedProductType.value,
-    brand: selectedBrand.value,
-    product: selectedProduct.value,
-  };
+const saveSelection = async () => {
+  if (!selectedProduct.value) return;
 
-  console.log('Selected product:', selection);
+  try {
+    // Get the current user
+    const {data: {user}} = await supabase.auth.getUser();
 
-  $q.notify({
-    color: 'positive',
-    message: 'Product selection saved successfully!',
-    icon: 'check_circle',
-    position: 'top',
-  });
+    // Add product to user profile
+    const {error} = await supabase
+      .from('account')
+      .upsert({
+        user_id: user!.id, // Skip null check as user has to already be logged in
+        product_type: selectedProductType.value,
+        product_brand: selectedBrand.value,
+        product_name: selectedProduct.value.name,
+        product_price: selectedProduct.value.price,
+        product_image_url: selectedProduct.value.imageUrl,
+      }, {
+        onConflict: 'user_id'
+      });
+
+    if (error) throw error;
+
+    $q.notify({
+      color: 'positive',
+      message: 'Product saved successfully!',
+      icon: 'check_circle',
+      position: 'top',
+    });
+  } catch (error) {
+    console.error('Error saving product:', error);
+    $q.notify({
+      color: 'negative',
+      message: 'Failed to save product',
+      icon: 'error',
+      position: 'top',
+    });
+  }
 };
 </script>
