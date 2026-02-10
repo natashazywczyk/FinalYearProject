@@ -4,6 +4,12 @@ export interface Account {
   id: number;
   created_at: string;
   user_id: string;
+  age_group?: string | null;
+  product_type?: string | null;
+  product_brand?: string | null;
+  product_name?: string | null;
+  product_price?: string | null;
+  product_image_url?: string | null;
 }
 
 export interface CravingLevel {
