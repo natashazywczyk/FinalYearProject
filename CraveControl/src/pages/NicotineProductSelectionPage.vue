@@ -140,12 +140,14 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useQuasar } from 'quasar';
+import { useRouter } from 'vue-router';
 import { supabase } from '../boot/supabase';
 import disposablesData from '../data/vape-disposables-scraped.json';
 import liquidsData from '../data/vape-liquids-scraped.json';
 import pouchesData from '../data/pouches-scraped.json';
 
 const $q = useQuasar();
+const router = useRouter();
 
 interface Product {
   imageUrl: string;
@@ -244,6 +246,9 @@ const saveSelection = async () => {
       icon: 'check_circle',
       position: 'top',
     });
+
+    // Redirect to dashboard
+    router.push('/dashboard');
   } catch (error) {
     console.error('Error saving product:', error);
     $q.notify({
