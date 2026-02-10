@@ -10,7 +10,7 @@
           Track how much money you've saved by resisting your cravings
         </div>
 
-        <div class="q-mb-md">
+        <div v-if="!hasProduct" class="q-mb-md">
           <span>Make sure you have a product selected</span>
           <q-btn
             label="Select Product"
@@ -45,10 +45,12 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { supabase } from '../boot/supabase';
 
 const imageLoaded = ref(false);
 const displayedSavings = ref(0);
 const targetSavings = ref(10); // Example target savings amount for demo
+const hasProduct = ref(false);
 
 const animateSavings = () => {
   const duration = 1200;
@@ -69,7 +71,19 @@ const animateSavings = () => {
   }, stepDuration);
 };
 
-onMounted(() => {
+onMounted(async () => {
+  // Check if user has already selected a product
+  const { data: { user } } = await supabase.auth.getUser();
+  if (user) {
+    const { data: account } = await supabase
+      .from('account')
+      .select('product_name')
+      .eq('user_id', user.id)
+      .single();
+
+    hasProduct.value = !!account?.product_name;
+  }
+
   const img = new Image();
   img.src = '/images/savings-pot.png';
   img.onload = () => {
