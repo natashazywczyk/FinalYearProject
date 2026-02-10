@@ -9,7 +9,7 @@
           Track how strong your cravings are each day.
         </div>
 
-        <q-card flat bordered class="q-mb-lg">
+        <q-card flat bordered class="q-mb-lg" v-if="!hasLoggedCraving">
           <q-card-section>
             <div class="text-h5 q-mb-lg text-center">How strong were your cravings today?</div>
 
@@ -49,17 +49,29 @@
           </q-card-section>
         </q-card>
 
-        <q-card flat bordered>
-          <q-card-section>
-            <div class="text-h6 q-mb-md">This Week's Craving Trend</div>
-            <apexchart
-              type="line"
-              height="350"
-              :options="chartOptions"
-              :series="series"
-            ></apexchart>
-          </q-card-section>
-        </q-card>
+        <transition name="fade">
+          <q-card flat bordered class="q-mb-lg" v-if="showThankYou">
+            <q-card-section class="text-center">
+              <div class="text-h5 q-mb-md">Thank you for logging your craving!</div>
+              <div class="text-body1 text-grey-7">Your progress has been recorded.</div>
+              <div class="text-body1 text-grey-7">See your craving trends below!</div>
+            </q-card-section>
+          </q-card>
+        </transition>
+
+        <transition name="fade-delayed">
+          <q-card flat bordered v-if="showChart">
+            <q-card-section>
+              <div class="text-h6 q-mb-md">This Week's Craving Trend</div>
+              <apexchart
+                type="line"
+                height="350"
+                :options="chartOptions"
+                :series="series"
+              ></apexchart>
+            </q-card-section>
+          </q-card>
+        </transition>
       </div>
     </div>
   </q-page>
@@ -71,6 +83,9 @@ import { useQuasar } from 'quasar';
 
 const $q = useQuasar();
 const cravingLevel = ref(1); // Default to 1
+const hasLoggedCraving = ref(false);
+const showThankYou = ref(false);
+const showChart = ref(false);
 
 // Example data for demo
 const series = ref([
@@ -131,6 +146,18 @@ const getCravingColor = (level: number) => {
 };
 
 const submitCravingLevel = () => {
+  hasLoggedCraving.value = true;
+
+  // Show thank you message with slight delay
+  setTimeout(() => {
+    showThankYou.value = true;
+  }, 300);
+
+  // Show chart slightly after
+  setTimeout(() => {
+    showChart.value = true;
+  }, 700);
+
   $q.notify({
     type: 'positive',
     message: `Craving level ${cravingLevel.value} submitted!`,
@@ -152,5 +179,29 @@ const submitCravingLevel = () => {
 .craving-icon-container.selected {
   background-color: rgba(25, 118, 210, 0.1);
   border: 2px solid #1976d2;
+}
+
+.fade-enter-active {
+  transition: opacity 0.8s ease;
+}
+
+.fade-enter-from {
+  opacity: 0;
+}
+
+.fade-enter-to {
+  opacity: 1;
+}
+
+.fade-delayed-enter-active {
+  transition: opacity 1s ease;
+}
+
+.fade-delayed-enter-from {
+  opacity: 0;
+}
+
+.fade-delayed-enter-to {
+  opacity: 1;
 }
 </style>
