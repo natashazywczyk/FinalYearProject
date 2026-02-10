@@ -66,7 +66,17 @@
         <transition name="fade-delayed">
           <q-card flat bordered v-if="showChart">
             <q-card-section>
-              <div class="text-h6 q-mb-md">This Week's Craving Trend</div>
+              <div class="row items-center justify-between q-mb-md">
+                <div class="text-h6">{{ timePeriod }} Craving Trend</div>
+                <q-select
+                  v-model="timePeriod"
+                  :options="timePeriodOptions"
+                  outlined
+                  dense
+                  style="min-width: 150px"
+                  @update:model-value="updateChartData"
+                />
+              </div>
               <apexchart
                 type="line"
                 height="350"
@@ -92,17 +102,19 @@ import { useQuasar } from 'quasar';
 import { supabase } from '../boot/supabase';
 
 const $q = useQuasar();
-const cravingLevel = ref(1); // Default to 1
+const cravingLevel = ref<number | null>(null);
 const hasLoggedCraving = ref(false);
 const showSubmitted = ref(false);
 const showChart = ref(false);
 const isLoading = ref(true);
+const timePeriod = ref('This Week');
+const timePeriodOptions = ['This Week', 'Last Week', 'Last Month'];
 
-// Example data for demo
+// Chart data
 const series = ref([
   {
     name: 'Craving Level',
-    data: [4, 3, 5, 2, 1, 2, 3],
+    data: [] as (number | null)[],
   },
 ]);
 
@@ -117,12 +129,12 @@ const chartOptions = ref({
     },
   },
   stroke: {
-    curve: 'straight',
-    width: 3,
+    curve: 'straight' as const,
+    width: 5,
   },
   colors: ['#1976D2'],
   xaxis: {
-    categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    categories: [] as string[],
   },
   yaxis: {
     min: 0,
@@ -156,7 +168,103 @@ const getCravingColor = (level: number) => {
   return colors[level - 1];
 };
 
+const updateChartData = async () => {
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const today = new Date();
+    let startDate: Date;
+    let endDate: Date = new Date(today);
+    let categories: string[];
+
+    if (timePeriod.value === 'This Week') {
+      // Get current week trackings
+      const dayOfWeek = today.getDay();
+      const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Make sure starts on Monday
+      startDate = new Date(today);
+      startDate.setDate(today.getDate() + diff);
+      categories = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    } else if (timePeriod.value === 'Last Week') {
+      // Get last week trackings
+      const dayOfWeek = today.getDay();
+      const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+      startDate = new Date(today);
+      startDate.setDate(today.getDate() + diff - 7);
+      endDate = new Date(startDate);
+      endDate.setDate(startDate.getDate() + 6);
+      categories = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    } else {
+      // Get last 30 day trackings
+      startDate = new Date(today);
+      startDate.setDate(today.getDate() - 29);
+      categories = [];
+      for (let i = 0; i < 30; i++) {
+        const date = new Date(startDate);
+        date.setDate(startDate.getDate() + i);
+        categories.push(`${date.getMonth() + 1}/${date.getDate()}`);
+      }
+    }
+
+    // Get craving level from database
+    const { data: cravings } = await supabase
+      .from('craving_level')
+      .select('date, level')
+      .eq('user_id', user.id)
+      .gte('date', startDate.toISOString().split('T')[0])
+      .lte('date', endDate.toISOString().split('T')[0])
+      .order('date', { ascending: true });
+
+    // Array matching categories in database
+    const dataMap = new Map(cravings?.map((c) => [c.date, c.level]) || []);
+    const chartData: (number | null)[] = [];
+
+    if (timePeriod.value === 'Last Month') {
+      for (let i = 0; i < 30; i++) {
+        const date = new Date(startDate);
+        date.setDate(startDate.getDate() + i);
+        const dateStr = date.toISOString().split('T')[0];
+        chartData.push(dataMap.get(dateStr) || null);
+      }
+    } else {
+      for (let i = 0; i < 7; i++) {
+        const date = new Date(startDate);
+        date.setDate(startDate.getDate() + i);
+        const dateStr = date.toISOString().split('T')[0];
+        chartData.push(dataMap.get(dateStr) || null);
+      }
+    }
+
+    // Update chart
+    chartOptions.value = {
+      ...chartOptions.value,
+      xaxis: {
+        ...chartOptions.value.xaxis,
+        categories: categories,
+      },
+    };
+    series.value = [
+      {
+        name: 'Craving Level',
+        data: chartData,
+      },
+    ];
+  } catch (error) {
+    console.error('Error fetching chart data:', error);
+  }
+};
+
 const submitCravingLevel = async () => {
+  if (!cravingLevel.value) {
+    $q.notify({
+      type: 'warning',
+      message: 'Please select a craving level',
+    });
+    return;
+  }
+
   hasLoggedCraving.value = true;
 
   try {
@@ -230,6 +338,9 @@ onMounted(async () => {
           showChart.value = true;
         }, 400);
       }
+
+      // Load chart
+      await updateChartData();
     }
   } catch (error) {
     console.error('Error checking cravings:', error);
