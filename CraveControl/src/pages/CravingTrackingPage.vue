@@ -54,14 +54,66 @@
         </q-card>
 
         <transition name="fade">
-          <q-card flat bordered class="q-mb-lg" v-if="showSubmitted">
+          <q-card flat bordered class="q-mb-lg" v-if="showSubmitted && !editing">
             <q-card-section class="text-center">
               <div class="text-h5 q-mb-md">Thank you for logging your craving!</div>
               <div class="text-body1 text-grey-7">Your progress has been recorded.</div>
-              <div class="text-body1 text-grey-7">See your craving trends below!</div>
+              <div class="q-mt-md">
+                <q-btn flat color="primary" label="Edit" icon="edit" @click="enableEditing" />
+              </div>
             </q-card-section>
           </q-card>
         </transition>
+
+        <!-- Edit -->
+        <q-card flat bordered class="q-mb-lg" v-if="editing && !isLoading">
+          <q-card-section>
+            <div class="text-h5 q-mb-lg text-center">Update your craving level for today</div>
+
+            <div
+              class="row items-center justify-center q-mb-lg"
+              style="max-width: 700px; margin: 0 auto"
+            >
+              <div class="text-subtitle1 text-grey-7 q-mr-md">None</div>
+              <div class="row justify-center q-col-gutter-md" style="flex: 0 0 auto">
+                <div
+                  class="col-auto text-center"
+                  v-for="level in 5"
+                  :key="level"
+                  style="cursor: pointer"
+                >
+                  <div
+                    @click="cravingLevel = level"
+                    class="craving-icon-container"
+                    :class="{ selected: cravingLevel === level }"
+                  >
+                    <q-icon
+                      :name="getCravingIcon(level)"
+                      :color="cravingLevel === level ? getCravingColor(level) : 'grey-5'"
+                      size="60px"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="text-subtitle1 text-grey-7 q-ml-md">Strong</div>
+            </div>
+
+            <div class="row justify-center q-mt-lg q-col-gutter-sm">
+              <div class="col-auto">
+                <q-btn flat label="Cancel" @click="cancelEditing" style="min-width: 150px" />
+              </div>
+              <div class="col-auto">
+                <q-btn
+                  color="primary"
+                  label="Update"
+                  @click="submitCravingLevel"
+                  unelevated
+                  style="min-width: 150px"
+                />
+              </div>
+            </div>
+          </q-card-section>
+        </q-card>
 
         <transition name="fade-delayed">
           <q-card flat bordered v-if="showChart">
@@ -107,6 +159,8 @@ const hasLoggedCraving = ref(false);
 const showSubmitted = ref(false);
 const showChart = ref(false);
 const isLoading = ref(true);
+const editing = ref(false);
+const originalCravingLevel = ref<number | null>(null);
 const timePeriod = ref('This Week');
 const timePeriodOptions = ['This Week', 'Last Week', 'Last Month'];
 
@@ -296,6 +350,17 @@ const submitCravingLevel = async () => {
   // Show chart with the new entry
   await updateChartData();
 
+  // If editing, just update and show confirmation
+  if (editing.value) {
+    editing.value = false;
+    originalCravingLevel.value = cravingLevel.value;
+    $q.notify({
+      type: 'positive',
+      message: `Craving level updated to ${cravingLevel.value}!`,
+    });
+    return;
+  }
+
   // Show thank you message with slight delay
   setTimeout(() => {
     showSubmitted.value = true;
@@ -310,6 +375,16 @@ const submitCravingLevel = async () => {
     type: 'positive',
     message: `Craving level ${cravingLevel.value} submitted!`,
   });
+};
+
+const enableEditing = () => {
+  editing.value = true;
+  originalCravingLevel.value = cravingLevel.value;
+};
+
+const cancelEditing = () => {
+  editing.value = false;
+  cravingLevel.value = originalCravingLevel.value;
 };
 
 onMounted(async () => {
@@ -331,6 +406,7 @@ onMounted(async () => {
         // If user has already logged today
         hasLoggedCraving.value = true;
         cravingLevel.value = todayLog.level;
+        originalCravingLevel.value = todayLog.level;
 
         // Show final screen with chart
         setTimeout(() => {
