@@ -137,7 +137,7 @@ const chartOptions = ref({
     categories: [] as string[],
   },
   yaxis: {
-    min: 0,
+    min: 1,
     max: 5,
     title: {
       text: 'Craving Level',
