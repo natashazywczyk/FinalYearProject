@@ -10,6 +10,7 @@ export interface Account {
   product_name?: string | null;
   product_price?: string | null;
   product_image_url?: string | null;
+  total_savings?: number;
 }
 
 export interface CravingLevel {
