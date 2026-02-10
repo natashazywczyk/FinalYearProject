@@ -1,8 +1,7 @@
 <template>
   <q-page class="q-pa-md">
-    <div v-if="imageLoaded" class="row justify-center">
+    <div class="row justify-center">
       <div class="col-12 col-md-10">
-
         <q-btn flat icon="arrow_back" label="Back" to="/dashboard" class="q-mb-md" />
 
         <div class="text-h4 q-mb-md">Savings</div>
@@ -12,33 +11,70 @@
 
         <div v-if="!hasProduct" class="q-mb-md">
           <span>Make sure you have a product selected</span>
-          <q-btn
-            label="Select Product"
-            to="/product-selection"
-            color="primary"
-            class="q-ml-sm"
-          />
+          <q-btn label="Select Product" to="/product-selection" color="primary" class="q-ml-sm" />
         </div>
 
-        <div class="row justify-center q-mt-xl q-mb-xl">
+        <!-- Question Screen -->
+        <div v-if="!hasAnswered && hasProduct" class="q-mt-xl">
+          <q-card flat bordered class="q-pa-lg">
+            <q-card-section class="text-center">
+              <div class="text-h5 q-mb-lg">Did you buy your nicotine product today?</div>
+              <div class="row q-col-gutter-md justify-center">
+                <div class="col-12 col-sm-4">
+                  <q-btn
+                    label="Yes"
+                    size="lg"
+                    class="full-width pastel-orange"
+                    @click="purchaseAnswer(true)"
+                    unelevated
+                  />
+                </div>
+                <div class="col-12 col-sm-4">
+                  <q-btn
+                    label="No"
+                    size="lg"
+                    class="full-width pastel-green"
+                    @click="purchaseAnswer(false)"
+                    unelevated
+                  />
+                </div>
+              </div>
+            </q-card-section>
+          </q-card>
+        </div>
+
+        <!-- Savings Pot -->
+        <div v-if="hasAnswered && imageLoaded" class="row justify-center q-mt-xl q-mb-xl">
           <div class="col-12 col-md-6 text-center">
-            <div style="position: relative; display: inline-block; max-width: 500px; width: 100%;">
+            <div style="position: relative; display: inline-block; max-width: 500px; width: 100%">
               <img
                 src="/images/savings-pot.png"
                 alt="Pot of Gold"
-                style="width: 100%; display: block;"
+                style="width: 100%; display: block"
               />
-              <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-                <div class="text-h2 text-white" style="font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">€{{ displayedSavings.toFixed(2) }}</div>
+              <div
+                style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)"
+              >
+                <div
+                  class="text-h2 text-white"
+                  style="font-weight: bold; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5)"
+                >
+                  €{{ displayedSavings.toFixed(2) }}
+                </div>
               </div>
             </div>
           </div>
         </div>
 
+        <!-- Loading  -->
+        <div
+          v-if="!imageLoaded && hasAnswered"
+          class="row justify-center items-center"
+          style="min-height: 400px"
+        >
+          <q-spinner color="primary" size="50px" />
+        </div>
       </div>
-    </div>
-    <div v-else class="row justify-center items-center" style="min-height: 400px;">
-      <q-spinner color="primary" size="50px" />
     </div>
   </q-page>
 </template>
@@ -49,13 +85,75 @@ import { supabase } from '../boot/supabase';
 
 const imageLoaded = ref(false);
 const displayedSavings = ref(0);
-const targetSavings = ref(10); // Example target savings amount for demo
+const totalSavings = ref(0);
 const hasProduct = ref(false);
+const hasAnswered = ref(false);
+const boughtProduct = ref(false);
+const productPrice = ref(0);
+
+const purchaseAnswer = async (answer: boolean) => {
+  boughtProduct.value = answer;
+  hasAnswered.value = true;
+
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (user) {
+      // Save the answer to database
+      await supabase.from('daily_purchases').upsert(
+        {
+          user_id: user.id,
+          date: new Date().toISOString().split('T')[0],
+          purchased: answer,
+        },
+        {
+          onConflict: 'user_id,date',
+        },
+      );
+
+      // If they didn't purchase, add to their savings
+      if (!answer) {
+        const { data: account } = await supabase
+          .from('account')
+          .select('total_savings')
+          .eq('user_id', user.id)
+          .single();
+
+        const currentSavings = account?.total_savings || 0;
+        const newSavings = currentSavings + productPrice.value;
+
+        await supabase.from('account').update({ total_savings: newSavings }).eq('user_id', user.id);
+
+        totalSavings.value = newSavings;
+      } else {
+        // If product was purchased, just show overall savings, no incrementation
+        const { data: account } = await supabase
+          .from('account')
+          .select('total_savings')
+          .eq('user_id', user.id)
+          .single();
+
+        totalSavings.value = account?.total_savings || 0;
+      }
+    }
+  } catch (error) {
+    console.log('Error saving purchase decision:', error);
+  }
+
+  // Load image and animate after answer
+  const img = new Image();
+  img.src = '/images/savings-pot.png';
+  img.onload = () => {
+    imageLoaded.value = true;
+    animateSavings();
+  };
+};
 
 const animateSavings = () => {
   const duration = 1200;
   const steps = 60;
-  const increment = targetSavings.value / steps;
+  const increment = totalSavings.value / steps;
   const stepDuration = duration / steps;
 
   let currentStep = 0;
@@ -65,7 +163,7 @@ const animateSavings = () => {
     displayedSavings.value += increment;
 
     if (currentStep >= steps) {
-      displayedSavings.value = targetSavings.value;
+      displayedSavings.value = totalSavings.value;
       clearInterval(timer);
     }
   }, stepDuration);
@@ -73,22 +171,69 @@ const animateSavings = () => {
 
 onMounted(async () => {
   // Check if user has already selected a product
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (user) {
     const { data: account } = await supabase
       .from('account')
-      .select('product_name')
+      .select('product_name, product_price, total_savings')
       .eq('user_id', user.id)
       .single();
 
     hasProduct.value = !!account?.product_name;
-  }
 
-  const img = new Image();
-  img.src = '/images/savings-pot.png';
-  img.onload = () => {
-    imageLoaded.value = true;
-    animateSavings();
-  };
+    if (account?.product_price) {
+      // Remove euro symbol, convert to number
+      productPrice.value = parseFloat(account.product_price.replace(/[^0-9.]/g, ''));
+    }
+
+    // Set current savings from database
+    totalSavings.value = account?.total_savings || 0;
+
+    // Check if user already answered today
+    const today = new Date().toISOString().split('T')[0];
+    const { data: todayAnswer } = await supabase
+      .from('daily_purchases')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('date', today)
+      .single();
+
+    if (todayAnswer) {
+      // If user has already answered, show savings
+      // Don't show purchase question again
+      hasAnswered.value = true;
+      boughtProduct.value = todayAnswer.purchased;
+
+      // Load savings image
+      const img = new Image();
+      img.src = '/images/savings-pot.png';
+      img.onload = () => {
+        imageLoaded.value = true;
+        animateSavings();
+      };
+    }
+  }
 });
 </script>
+
+<style scoped>
+.pastel-orange {
+  background-color: #ffd4a3 !important;
+  color: #8b5a00 !important;
+}
+
+.pastel-orange:hover {
+  background-color: #ffbc7f !important;
+}
+
+.pastel-green {
+  background-color: #b8e6b8 !important;
+  color: #2d5f2d !important;
+}
+
+.pastel-green:hover {
+  background-color: #9fdb9f !important;
+}
+</style>
