@@ -89,7 +89,8 @@ const totalSavings = ref(0);
 const hasProduct = ref(false);
 const hasAnswered = ref(false);
 const boughtProduct = ref(false);
-const productPrice = ref(0);const isLoading = ref(true);
+const productPrice = ref(0);
+const isLoading = ref(true);
 const purchaseAnswer = async (answer: boolean) => {
   boughtProduct.value = answer;
   hasAnswered.value = true;
