@@ -43,6 +43,71 @@
           </q-card>
         </div>
 
+        <!-- Answered (non-editing) -->
+        <transition name="fade">
+          <div v-if="hasAnswered && !editing" class="q-mt-xl row justify-center">
+            <q-card
+              flat
+              bordered
+              class="q-pa-lg q-mb-lg text-center"
+              style="max-width: 400px; width: 100%"
+            >
+              <q-card-section>
+                <div class="text-h6 q-mb-sm">
+                  {{ boughtProduct ? 'Product bought today' : 'No product bought today' }}
+                </div>
+                <q-btn flat color="primary" label="Edit" icon="edit" @click="enableEditing" />
+              </q-card-section>
+            </q-card>
+          </div>
+        </transition>
+
+        <!-- Edit Screen -->
+        <div v-if="editing" class="q-mt-xl">
+          <q-card flat bordered class="q-pa-lg q-mb-lg">
+            <q-card-section class="text-center">
+              <div class="text-h5 q-mb-lg">Update: did you buy your nicotine product today?</div>
+              <div class="row q-col-gutter-md justify-center q-mb-lg">
+                <div class="col-12 col-sm-4">
+                  <q-btn
+                    label="Yes"
+                    size="lg"
+                    class="full-width"
+                    :class="editAnswer === true ? 'pastel-orange' : 'bg-grey-3 text-grey-8'"
+                    @click="editAnswer = true"
+                    unelevated
+                  />
+                </div>
+                <div class="col-12 col-sm-4">
+                  <q-btn
+                    label="No"
+                    size="lg"
+                    class="full-width"
+                    :class="editAnswer === false ? 'pastel-green' : 'bg-grey-3 text-grey-8'"
+                    @click="editAnswer = false"
+                    unelevated
+                  />
+                </div>
+              </div>
+              <div class="row q-col-gutter-sm justify-center">
+                <div class="col-auto">
+                  <q-btn flat label="Cancel" @click="cancelEditing" style="min-width: 150px" />
+                </div>
+                <div class="col-auto">
+                  <q-btn
+                    color="primary"
+                    label="Update"
+                    @click="submitEdit"
+                    unelevated
+                    style="min-width: 150px"
+                    :loading="isUpdating"
+                  />
+                </div>
+              </div>
+            </q-card-section>
+          </q-card>
+        </div>
+
         <!-- Savings Pot -->
         <div v-if="hasAnswered && imageLoaded" class="row justify-center q-mt-xl q-mb-xl">
           <div class="col-12 col-md-6 text-center">
@@ -81,8 +146,10 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { useQuasar } from 'quasar';
 import { supabase } from '../boot/supabase';
 
+const $q = useQuasar();
 const imageLoaded = ref(false);
 const displayedSavings = ref(0);
 const totalSavings = ref(0);
@@ -91,6 +158,9 @@ const hasAnswered = ref(false);
 const boughtProduct = ref(false);
 const productPrice = ref(0);
 const isLoading = ref(true);
+const editing = ref(false);
+const editAnswer = ref<boolean | null>(null);
+const isUpdating = ref(false);
 const purchaseAnswer = async (answer: boolean) => {
   boughtProduct.value = answer;
   hasAnswered.value = true;
@@ -161,6 +231,67 @@ const purchaseAnswer = async (answer: boolean) => {
     imageLoaded.value = true;
     animateSavings();
   };
+};
+
+const enableEditing = () => {
+  editAnswer.value = boughtProduct.value;
+  editing.value = true;
+};
+
+const cancelEditing = () => {
+  editing.value = false;
+  editAnswer.value = null;
+};
+
+const submitEdit = async () => {
+  if (editAnswer.value === null) {
+    $q.notify({ type: 'warning', message: 'Please select Yes or No' });
+    return;
+  }
+
+  isUpdating.value = true;
+
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (user) {
+      const newAnswer = editAnswer.value;
+      const oldAnswer = boughtProduct.value;
+
+      // Update daily_purchases
+      await supabase.from('daily_purchases').upsert(
+        {
+          user_id: user.id,
+          date: new Date().toISOString().split('T')[0],
+          purchased: newAnswer,
+        },
+        { onConflict: 'user_id,date' },
+      );
+
+      // Change total_savings based on the edit
+      if (oldAnswer !== newAnswer) {
+        const delta = newAnswer ? -productPrice.value : productPrice.value;
+        const newSavings = Math.max(0, totalSavings.value + delta);
+
+        await supabase.from('account').update({ total_savings: newSavings }).eq('user_id', user.id);
+
+        totalSavings.value = newSavings;
+        displayedSavings.value = newSavings;
+      }
+
+      boughtProduct.value = newAnswer;
+      editing.value = false;
+      editAnswer.value = null;
+
+      $q.notify({ type: 'positive', message: 'Purchase updated!' });
+    }
+  } catch (error) {
+    console.error('Error updating purchase:', error);
+    $q.notify({ type: 'negative', message: 'Failed to update purchase' });
+  } finally {
+    isUpdating.value = false;
+  }
 };
 
 const animateSavings = () => {
@@ -242,6 +373,18 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.fade-enter-active {
+  transition: opacity 0.8s ease;
+}
+
+.fade-enter-from {
+  opacity: 0;
+}
+
+.fade-enter-to {
+  opacity: 1;
+}
+
 .pastel-orange {
   background-color: #ffd4a3 !important;
   color: #8b5a00 !important;
