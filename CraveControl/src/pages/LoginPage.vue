@@ -1,56 +1,82 @@
 <template>
-  <q-page class="flex flex-center">
-    <q-card class="q-pa-md" style="width: 400px; max-width: 90vw">
-      <q-card-section class="text-center">
-        <div class="text-h6">Sign In</div>
-      </q-card-section>
+  <q-page class="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-gray-900">
+    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+      <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-white">
+        Sign in
+      </h2>
+    </div>
 
-      <q-card-section>
-        <q-form @submit="handleLogin" class="q-gutter-md">
-          <q-input
-            filled
-            v-model="email"
-            label="Email"
-            type="email"
-            lazy-rules
-            :rules="[(val) => (val && val.length > 0) || 'Email required']"
-          />
-
-          <q-input
-            filled
-            v-model="password"
-            label="Password"
-            type="password"
-            lazy-rules
-            :rules="[(val) => (val && val.length > 0) || 'Password required']"
-          />
-
-          <div>
-            <q-btn
-              label="Sign In"
-              type="submit"
-              color="primary"
-              class="full-width"
-              :loading="loading"
+    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+      <form class="space-y-6" @submit.prevent="handleLogin">
+        <div>
+          <label for="email" class="block text-sm/6 font-medium text-gray-100">Email address</label>
+          <div class="mt-2">
+            <input
+              v-model="email"
+              type="email"
+              id="email"
+              autocomplete="email"
+              required
+              class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
             />
           </div>
-        </q-form>
+        </div>
 
-        <q-separator class="q-my-md" />
+        <div>
+          <div class="flex items-center justify-between">
+            <label for="password" class="block text-sm/6 font-medium text-gray-100">Password</label>
+          </div>
+          <div class="mt-2">
+            <input
+              v-model="password"
+              type="password"
+              id="password"
+              autocomplete="current-password"
+              required
+              class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+            />
+          </div>
+        </div>
 
-        <div class="text-center q-mb-sm text-grey-7">Or</div>
+        <div>
+          <button
+            type="submit"
+            :disabled="loading"
+            class="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {{ loading ? 'Signing in...' : 'Sign in' }}
+          </button>
+        </div>
+      </form>
 
-        <q-btn
-          outline
-          color="primary"
-          icon="img:https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
-          label="Sign in with Google"
-          class="full-width"
-          @click="signInWithGoogle"
-          :loading="googleLoading"
-        />
-      </q-card-section>
-    </q-card>
+      <div class="mt-6">
+        <div class="relative">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-white/10" />
+          </div>
+          <div class="relative flex justify-center text-sm/6">
+            <span class="bg-gray-900 px-6 text-gray-400">Or sign in with</span>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <button
+            type="button"
+            :disabled="googleLoading"
+            @click="signInWithGoogle"
+            class="flex w-full items-center justify-center gap-3 rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="h-5 w-5" alt="Google" />
+            {{ googleLoading ? 'Redirecting...' : 'Google' }}
+          </button>
+        </div>
+      </div>
+
+      <p class="mt-10 text-center text-sm/6 text-gray-400">
+        Don't have an account?
+        <router-link to="/signup" class="font-semibold text-indigo-400 hover:text-indigo-300">Create an account</router-link>
+      </p>
+    </div>
   </q-page>
 </template>
 
