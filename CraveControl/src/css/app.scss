@@ -1,6 +1,4 @@
 // app global css in SCSS form
 
-// TailwindCSS directives
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+// TailwindCSS v4
+@import "tailwindcss";
