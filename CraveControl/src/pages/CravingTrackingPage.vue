@@ -1,148 +1,167 @@
 <template>
-  <q-page class="q-pa-md">
-    <div class="row justify-center">
-      <div class="col-12 col-md-10">
-        <q-btn flat icon="arrow_back" label="Back" to="/dashboard" class="q-mb-md" />
+  <q-page class="px-6 py-8" :class="$q.dark.isActive ? 'bg-gray-900' : 'bg-gray-100'">
+    <div class="max-w-5xl mx-auto">
+      <router-link
+        to="/dashboard"
+        class="inline-flex items-center gap-1 text-sm font-medium mb-6"
+        :class="$q.dark.isActive ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'"
+      >
+        <span class="material-icons text-base">arrow_back</span>
+        Back
+      </router-link>
 
-        <div class="text-h4 q-mb-md">Log Craving Level</div>
-        <div class="text-subtitle1 q-mb-lg text-grey-7">
-          Track how strong your cravings are each day.
+      <div class="text-3xl font-bold mb-2" :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'">
+        Log Craving Level
+      </div>
+      <div class="text-sm mb-8" :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'">
+        Track how strong your cravings are each day.
+      </div>
+
+      <!-- Log craving -->
+      <div
+        v-if="!hasLoggedCraving && !isLoading"
+        class="rounded-xl p-6 border mb-6"
+        :class="$q.dark.isActive ? 'bg-gray-800/50 border-white/10' : 'bg-white border-gray-200 shadow-sm'"
+      >
+        <div class="text-xl font-semibold text-center mb-6" :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'">
+          How strong were your cravings today?
         </div>
 
-        <q-card flat bordered class="q-mb-lg" v-if="!hasLoggedCraving && !isLoading">
-          <q-card-section>
-            <div class="text-h5 q-mb-lg text-center">How strong were your cravings today?</div>
-
+        <!-- Craving Levels -->
+        <div class="flex items-center justify-center gap-4 mb-6">
+          <span class="text-sm" :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'">None</span>
+          <div class="flex gap-4">
             <div
-              class="row items-center justify-center q-mb-lg"
-              style="max-width: 700px; margin: 0 auto"
+              v-for="level in 5"
+              :key="level"
+              class="text-center cursor-pointer"
+              @click="cravingLevel = level"
             >
-              <div class="text-subtitle1 text-grey-7 q-mr-md">None</div>
-              <div class="row justify-center q-col-gutter-md" style="flex: 0 0 auto">
-                <div
-                  class="col-auto text-center"
-                  v-for="level in 5"
-                  :key="level"
-                  style="cursor: pointer"
-                >
-                  <div
-                    @click="cravingLevel = level"
-                    class="craving-icon-container"
-                    :class="{ selected: cravingLevel === level }"
-                  >
-                    <q-icon
-                      :name="getCravingIcon(level)"
-                      :color="cravingLevel === level ? getCravingColor(level) : 'grey-5'"
-                      size="60px"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div class="text-subtitle1 text-grey-7 q-ml-md">Strong</div>
-            </div>
-
-            <div class="row justify-center q-mt-lg">
-              <q-btn
-                color="primary"
-                label="Submit"
-                @click="submitCravingLevel"
-                unelevated
-                style="min-width: 200px"
-              />
-            </div>
-          </q-card-section>
-        </q-card>
-
-        <transition name="fade">
-          <q-card flat bordered class="q-mb-lg" v-if="showSubmitted && !editing">
-            <q-card-section class="text-center">
-              <div class="text-h5 q-mb-md">Thank you for logging your craving!</div>
-              <div class="text-body1 text-grey-7">Your progress has been recorded.</div>
-              <div class="q-mt-md">
-                <q-btn flat color="primary" label="Edit" icon="edit" @click="enableEditing" />
-              </div>
-            </q-card-section>
-          </q-card>
-        </transition>
-
-        <!-- Edit -->
-        <q-card flat bordered class="q-mb-lg" v-if="editing && !isLoading">
-          <q-card-section>
-            <div class="text-h5 q-mb-lg text-center">Update your craving level for today</div>
-
-            <div
-              class="row items-center justify-center q-mb-lg"
-              style="max-width: 700px; margin: 0 auto"
-            >
-              <div class="text-subtitle1 text-grey-7 q-mr-md">None</div>
-              <div class="row justify-center q-col-gutter-md" style="flex: 0 0 auto">
-                <div
-                  class="col-auto text-center"
-                  v-for="level in 5"
-                  :key="level"
-                  style="cursor: pointer"
-                >
-                  <div
-                    @click="cravingLevel = level"
-                    class="craving-icon-container"
-                    :class="{ selected: cravingLevel === level }"
-                  >
-                    <q-icon
-                      :name="getCravingIcon(level)"
-                      :color="cravingLevel === level ? getCravingColor(level) : 'grey-5'"
-                      size="60px"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div class="text-subtitle1 text-grey-7 q-ml-md">Strong</div>
-            </div>
-
-            <div class="row justify-center q-mt-lg q-col-gutter-sm">
-              <div class="col-auto">
-                <q-btn flat label="Cancel" @click="cancelEditing" style="min-width: 150px" />
-              </div>
-              <div class="col-auto">
-                <q-btn
-                  color="primary"
-                  label="Update"
-                  @click="submitCravingLevel"
-                  unelevated
-                  style="min-width: 150px"
+              <div
+                class="craving-icon-container"
+                :class="{ selected: cravingLevel === level }"
+              >
+                <q-icon
+                  :name="getCravingIcon(level)"
+                  :color="cravingLevel === level ? getCravingColor(level) : 'grey-5'"
+                  size="60px"
                 />
               </div>
             </div>
-          </q-card-section>
-        </q-card>
+          </div>
+          <span class="text-sm" :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'">Strong</span>
+        </div>
 
-        <transition name="fade-delayed">
-          <q-card flat bordered v-if="showChart">
-            <q-card-section>
-              <div class="row items-center justify-between q-mb-md">
-                <div class="text-h6">{{ timePeriod }} Craving Trend</div>
-                <q-select
-                  v-model="timePeriod"
-                  :options="timePeriodOptions"
-                  outlined
-                  dense
-                  style="min-width: 150px"
-                  @update:model-value="updateChartData"
+        <div class="flex justify-center">
+          <button
+            @click="submitCravingLevel"
+            class="rounded-md bg-[#775AB8] px-6 py-2 text-sm font-semibold text-white hover:bg-[#6B51A6]"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+
+      <transition name="fade">
+        <div
+          v-if="showSubmitted && !editing"
+          class="rounded-xl p-6 border mb-6 text-center"
+          :class="$q.dark.isActive ? 'bg-gray-800/50 border-white/10' : 'bg-white border-gray-200 shadow-sm'"
+        >
+          <div class="text-xl font-semibold mb-2" :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'">
+            Thank you for logging your craving!
+          </div>
+          <div class="text-sm mb-4" :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'">
+            Your progress has been recorded.
+          </div>
+          <button
+            @click="enableEditing"
+            class="inline-flex items-center gap-1 text-sm font-medium text-[#775AB8] hover:text-[#6B51A6]"
+          >
+            <span class="material-icons text-base">edit</span>
+            Edit
+          </button>
+        </div>
+      </transition>
+
+      <!-- Edit -->
+      <div
+        v-if="editing && !isLoading"
+        class="rounded-xl p-6 border mb-6"
+        :class="$q.dark.isActive ? 'bg-gray-800/50 border-white/10' : 'bg-white border-gray-200 shadow-sm'"
+      >
+        <div class="text-xl font-semibold text-center mb-6" :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'">
+          Update your craving level for today
+        </div>
+
+        <div class="flex items-center justify-center gap-4 mb-6">
+          <span class="text-sm" :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'">None</span>
+          <div class="flex gap-4">
+            <div
+              v-for="level in 5"
+              :key="level"
+              class="text-center cursor-pointer"
+              @click="cravingLevel = level"
+            >
+              <div
+                class="craving-icon-container"
+                :class="{ selected: cravingLevel === level }"
+              >
+                <q-icon
+                  :name="getCravingIcon(level)"
+                  :color="cravingLevel === level ? getCravingColor(level) : 'grey-5'"
+                  size="60px"
                 />
               </div>
-              <apexchart
-                type="line"
-                height="350"
-                :options="chartOptions"
-                :series="series"
-              ></apexchart>
-            </q-card-section>
-          </q-card>
-        </transition>
-
-        <!-- Loading -->
-        <div v-if="isLoading" class="row justify-center items-center" style="min-height: 400px">
-          <q-spinner color="primary" size="50px" />
+            </div>
+          </div>
+          <span class="text-sm" :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'">Strong</span>
         </div>
+
+        <div class="flex justify-center gap-3">
+          <button
+            @click="cancelEditing"
+            class="rounded-md border px-6 py-2 text-sm font-semibold transition-colors"
+            :class="$q.dark.isActive ? 'border-white/10 text-gray-300 hover:bg-white/10' : 'border-gray-300 text-gray-700 hover:bg-gray-50'"
+          >
+            Cancel
+          </button>
+          <button
+            @click="submitCravingLevel"
+            class="rounded-md bg-[#775AB8] px-6 py-2 text-sm font-semibold text-white hover:bg-[#6B51A6]"
+          >
+            Update
+          </button>
+        </div>
+      </div>
+
+      <!-- Apex Chart -->
+      <transition name="fade-delayed">
+        <div
+          v-if="showChart"
+          class="rounded-xl p-6 border"
+          :class="$q.dark.isActive ? 'bg-gray-800/50 border-white/10' : 'bg-white border-gray-200 shadow-sm'"
+        >
+          <div class="flex items-center justify-between mb-4">
+            <div class="text-lg font-semibold" :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'">
+              {{ timePeriod }} Craving Trend
+            </div>
+            <q-select
+              v-model="timePeriod"
+              :options="timePeriodOptions"
+              outlined
+              dense
+              style="min-width: 150px"
+              @update:model-value="updateChartData"
+            />
+          </div>
+          <apexchart type="line" height="350" :options="chartOptions" :series="series"></apexchart>
+        </div>
+      </transition>
+
+      <!-- Loading -->
+      <div v-if="isLoading" class="flex justify-center items-center" style="min-height: 400px">
+        <q-spinner color="primary" size="50px" />
       </div>
     </div>
   </q-page>
