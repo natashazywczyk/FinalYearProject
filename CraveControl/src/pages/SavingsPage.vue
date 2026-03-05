@@ -1,144 +1,207 @@
 <template>
-  <q-page class="q-pa-md">
-    <div class="row justify-center">
-      <div class="col-12 col-md-10">
-        <q-btn flat icon="arrow_back" label="Back" to="/dashboard" class="q-mb-md" />
+  <q-page class="px-6 py-8" :class="$q.dark.isActive ? 'bg-gray-900' : 'bg-gray-100'">
+    <div class="max-w-5xl mx-auto">
+      <router-link
+        to="/dashboard"
+        class="inline-flex items-center gap-1 text-sm font-medium mb-6"
+        :class="
+          $q.dark.isActive ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'
+        "
+      >
+        <span class="material-icons text-base">arrow_back</span>
+        Back
+      </router-link>
 
-        <div class="text-h4 q-mb-md">Savings</div>
-        <div class="text-subtitle1 q-mb-lg text-grey-7">
-          Track how much money you've saved by resisting your cravings
-        </div>
+      <div
+        class="text-3xl font-bold mb-2"
+        :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'"
+      >
+        Savings
+      </div>
+      <div class="text-sm mb-8" :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'">
+        Track how much money you've saved by resisting your cravings
+      </div>
 
-        <div v-if="!hasProduct && !isLoading" class="q-mb-md">
-          <span>Make sure you have a product selected</span>
-          <q-btn label="Select Product" to="/product-selection" color="primary" class="q-ml-sm" />
-        </div>
+      <!-- No product selected -->
+      <div
+        v-if="!hasProduct && !isLoading"
+        class="rounded-xl p-6 border mb-6 flex items-center gap-4"
+        :class="
+          $q.dark.isActive ? 'bg-gray-800/50 border-white/10' : 'bg-white border-gray-200 shadow-sm'
+        "
+      >
+        <span class="text-sm" :class="$q.dark.isActive ? 'text-gray-300' : 'text-gray-700'"
+          >Make sure you have a product selected</span
+        >
+        <router-link
+          to="/product-selection"
+          class="rounded-md bg-[#775AB8] px-3 py-1.5 text-sm font-semibold text-white hover:bg-[#6B51A6]"
+          >Select Product</router-link
+        >
+      </div>
 
-        <!-- Question Screen -->
-        <div v-if="!hasAnswered && hasProduct && !isLoading" class="q-mt-xl">
-          <q-card flat bordered class="q-pa-lg">
-            <q-card-section class="text-center">
-              <div class="text-h5 q-mb-lg">Did you buy your nicotine product today?</div>
-              <div class="row q-col-gutter-md justify-center">
-                <div class="col-12 col-sm-4">
-                  <q-btn
-                    label="Yes"
-                    size="lg"
-                    class="full-width pastel-orange"
-                    @click="purchaseAnswer(true)"
-                    unelevated
-                  />
-                </div>
-                <div class="col-12 col-sm-4">
-                  <q-btn
-                    label="No"
-                    size="lg"
-                    class="full-width pastel-green"
-                    @click="purchaseAnswer(false)"
-                    unelevated
-                  />
-                </div>
-              </div>
-            </q-card-section>
-          </q-card>
-        </div>
-
-        <!-- Answered (non-editing) -->
-        <transition name="fade">
-          <div v-if="hasAnswered && !editing" class="q-mt-xl row justify-center">
-            <q-card
-              flat
-              bordered
-              class="q-pa-lg q-mb-lg text-center"
-              style="max-width: 400px; width: 100%"
-            >
-              <q-card-section>
-                <div class="text-h6 q-mb-sm">
-                  {{ boughtProduct ? 'Product bought today' : 'No product bought today' }}
-                </div>
-                <q-btn flat color="primary" label="Edit" icon="edit" @click="enableEditing" />
-              </q-card-section>
-            </q-card>
+      <!-- Question Screen -->
+      <div v-if="!hasAnswered && hasProduct && !isLoading">
+        <div
+          class="rounded-xl p-6 border"
+          :class="
+            $q.dark.isActive
+              ? 'bg-gray-800/50 border-white/10'
+              : 'bg-white border-gray-200 shadow-sm'
+          "
+        >
+          <div
+            class="text-xl font-semibold text-center mb-6"
+            :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'"
+          >
+            Did you buy your nicotine product today?
           </div>
-        </transition>
-
-        <!-- Edit Screen -->
-        <div v-if="editing" class="q-mt-xl">
-          <q-card flat bordered class="q-pa-lg q-mb-lg">
-            <q-card-section class="text-center">
-              <div class="text-h5 q-mb-lg">Update: did you buy your nicotine product today?</div>
-              <div class="row q-col-gutter-md justify-center q-mb-lg">
-                <div class="col-12 col-sm-4">
-                  <q-btn
-                    label="Yes"
-                    size="lg"
-                    class="full-width"
-                    :class="editAnswer === true ? 'pastel-orange' : 'bg-grey-3 text-grey-8'"
-                    @click="editAnswer = true"
-                    unelevated
-                  />
-                </div>
-                <div class="col-12 col-sm-4">
-                  <q-btn
-                    label="No"
-                    size="lg"
-                    class="full-width"
-                    :class="editAnswer === false ? 'pastel-green' : 'bg-grey-3 text-grey-8'"
-                    @click="editAnswer = false"
-                    unelevated
-                  />
-                </div>
-              </div>
-              <div class="row q-col-gutter-sm justify-center">
-                <div class="col-auto">
-                  <q-btn flat label="Cancel" @click="cancelEditing" style="min-width: 150px" />
-                </div>
-                <div class="col-auto">
-                  <q-btn
-                    color="primary"
-                    label="Update"
-                    @click="submitEdit"
-                    unelevated
-                    style="min-width: 150px"
-                    :loading="isUpdating"
-                  />
-                </div>
-              </div>
-            </q-card-section>
-          </q-card>
+          <div class="flex justify-center gap-4">
+            <button
+              @click="purchaseAnswer(true)"
+              class="rounded-md px-8 py-3 text-sm font-semibold text-white transition-colors"
+              style="background-color: #ef4444"
+              onmouseover="this.style.backgroundColor='#dc2626'"
+              onmouseout="this.style.backgroundColor='#ef4444'"
+            >
+              Yes
+            </button>
+            <button
+              @click="purchaseAnswer(false)"
+              class="rounded-md px-8 py-3 text-sm font-semibold text-white transition-colors"
+              style="background-color: #22c55e"
+              onmouseover="this.style.backgroundColor='#16a34a'"
+              onmouseout="this.style.backgroundColor='#22c55e'"
+            >
+              No
+            </button>
+          </div>
         </div>
+      </div>
 
-        <!-- Savings Pot -->
-        <div v-if="hasAnswered && imageLoaded" class="row justify-center q-mt-xl q-mb-xl">
-          <div class="col-12 col-md-6 text-center">
-            <div style="position: relative; display: inline-block; max-width: 500px; width: 100%">
-              <img
-                src="/images/savings-pot.png"
-                alt="Pot of Gold"
-                style="width: 100%; display: block"
-              />
-              <div
-                style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)"
-              >
-                <div
-                  class="text-h2 text-white"
-                  style="font-weight: bold; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5)"
-                >
-                  €{{ displayedSavings.toFixed(2) }}
-                </div>
-              </div>
+      <!-- Answered (non-editing) -->
+      <transition name="fade">
+        <div v-if="hasAnswered && !editing" class="flex justify-center">
+          <div
+            class="rounded-xl p-6 border text-center w-full max-w-sm"
+            :class="
+              $q.dark.isActive
+                ? 'bg-gray-800/50 border-white/10'
+                : 'bg-white border-gray-200 shadow-sm'
+            "
+          >
+            <div
+              class="text-lg font-semibold mb-3"
+              :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'"
+            >
+              {{ boughtProduct ? 'Product bought today' : 'No product bought today' }}
+            </div>
+            <button
+              @click="enableEditing"
+              class="inline-flex items-center gap-1 text-sm font-medium text-[#775AB8] hover:text-[#6B51A6]"
+            >
+              <span class="material-icons text-base">edit</span>
+              Edit
+            </button>
+          </div>
+        </div>
+      </transition>
+
+      <!-- Edit Screen -->
+      <div
+        v-if="editing"
+        class="rounded-xl p-6 border mb-6"
+        :class="
+          $q.dark.isActive ? 'bg-gray-800/50 border-white/10' : 'bg-white border-gray-200 shadow-sm'
+        "
+      >
+        <div
+          class="text-xl font-semibold text-center mb-6"
+          :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'"
+        >
+          Did you buy your nicotine product today?
+        </div>
+        <div class="flex justify-center gap-4 mb-6">
+          <button
+            @click="editAnswer = true"
+            class="rounded-md px-8 py-3 text-sm font-semibold text-white transition-colors"
+            :style="editAnswer === true ? 'background-color:#ef4444' : ''"
+            :class="
+              editAnswer === true
+                ? ''
+                : $q.dark.isActive
+                  ? 'bg-white/10 text-gray-300'
+                  : 'bg-gray-200 text-gray-700'
+            "
+          >
+            Yes
+          </button>
+          <button
+            @click="editAnswer = false"
+            class="rounded-md px-8 py-3 text-sm font-semibold text-white transition-colors"
+            :style="editAnswer === false ? 'background-color:#22c55e' : ''"
+            :class="
+              editAnswer === false
+                ? ''
+                : $q.dark.isActive
+                  ? 'bg-white/10 text-gray-300'
+                  : 'bg-gray-200 text-gray-700'
+            "
+          >
+            No
+          </button>
+        </div>
+        <div class="flex justify-center gap-3">
+          <button
+            @click="cancelEditing"
+            class="rounded-md border px-6 py-2 text-sm font-semibold transition-colors"
+            :class="
+              $q.dark.isActive
+                ? 'border-white/10 text-gray-300 hover:bg-white/10'
+                : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+            "
+          >
+            Cancel
+          </button>
+          <button
+            @click="submitEdit"
+            class="rounded-md bg-[#775AB8] px-6 py-2 text-sm font-semibold text-white hover:bg-[#6B51A6] disabled:opacity-50"
+            :disabled="isUpdating"
+          >
+            {{ isUpdating ? 'Updating...' : 'Update' }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Savings Pot -->
+      <div v-if="hasAnswered && imageLoaded" class="flex justify-center mt-8 mb-8">
+        <div
+          class="text-center"
+          style="position: relative; display: inline-block; max-width: 500px; width: 100%"
+        >
+          <img
+            src="/images/savings-pot.png"
+            alt="Pot of Gold"
+            style="width: 100%; display: block"
+          />
+          <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)">
+            <div
+              class="text-white font-bold text-5xl"
+              style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5)"
+            >
+              €{{ displayedSavings.toFixed(2) }}
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Loading  -->
-        <div
-          v-if="isLoading || (!imageLoaded && hasAnswered)"
-          class="row justify-center items-center"
-          style="min-height: 400px"
-        >
-          <q-spinner color="primary" size="50px" />
-        </div>
+      <!-- Loading -->
+      <div
+        v-if="isLoading || (!imageLoaded && hasAnswered)"
+        class="flex justify-center items-center"
+        style="min-height: 400px"
+      >
+        <q-spinner color="primary" size="50px" />
       </div>
     </div>
   </q-page>
@@ -383,23 +446,5 @@ onMounted(async () => {
 
 .fade-enter-to {
   opacity: 1;
-}
-
-.pastel-orange {
-  background-color: #ffd4a3 !important;
-  color: #8b5a00 !important;
-}
-
-.pastel-orange:hover {
-  background-color: #ffbc7f !important;
-}
-
-.pastel-green {
-  background-color: #b8e6b8 !important;
-  color: #2d5f2d !important;
-}
-
-.pastel-green:hover {
-  background-color: #9fdb9f !important;
 }
 </style>
