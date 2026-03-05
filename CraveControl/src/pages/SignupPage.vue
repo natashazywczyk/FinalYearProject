@@ -6,7 +6,9 @@
     <router-link
       to="/"
       class="absolute top-8 left-8 inline-flex items-center gap-1 text-sm font-medium"
-      :class="$q.dark.isActive ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'"
+      :class="
+        $q.dark.isActive ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'
+      "
     >
       <span class="material-icons text-base">arrow_back</span>
       Back
