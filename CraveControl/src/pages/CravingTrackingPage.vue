@@ -4,13 +4,18 @@
       <router-link
         to="/dashboard"
         class="inline-flex items-center gap-1 text-sm font-medium mb-6"
-        :class="$q.dark.isActive ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'"
+        :class="
+          $q.dark.isActive ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'
+        "
       >
         <span class="material-icons text-base">arrow_back</span>
         Back
       </router-link>
 
-      <div class="text-3xl font-bold mb-2" :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'">
+      <div
+        class="text-3xl font-bold mb-2"
+        :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'"
+      >
         Log Craving Level
       </div>
       <div class="text-sm mb-8" :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'">
@@ -21,15 +26,22 @@
       <div
         v-if="!hasLoggedCraving && !isLoading"
         class="rounded-xl p-6 border mb-6"
-        :class="$q.dark.isActive ? 'bg-gray-800/50 border-white/10' : 'bg-white border-gray-200 shadow-sm'"
+        :class="
+          $q.dark.isActive ? 'bg-gray-800/50 border-white/10' : 'bg-white border-gray-200 shadow-sm'
+        "
       >
-        <div class="text-xl font-semibold text-center mb-6" :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'">
+        <div
+          class="text-xl font-semibold text-center mb-6"
+          :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'"
+        >
           How strong were your cravings today?
         </div>
 
         <!-- Craving Levels -->
         <div class="flex items-center justify-center gap-4 mb-6">
-          <span class="text-sm" :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'">None</span>
+          <span class="text-sm" :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'"
+            >None</span
+          >
           <div class="flex gap-4">
             <div
               v-for="level in 5"
@@ -37,10 +49,7 @@
               class="text-center cursor-pointer"
               @click="cravingLevel = level"
             >
-              <div
-                class="craving-icon-container"
-                :class="{ selected: cravingLevel === level }"
-              >
+              <div class="craving-icon-container" :class="{ selected: cravingLevel === level }">
                 <q-icon
                   :name="getCravingIcon(level)"
                   :color="cravingLevel === level ? getCravingColor(level) : 'grey-5'"
@@ -49,7 +58,9 @@
               </div>
             </div>
           </div>
-          <span class="text-sm" :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'">Strong</span>
+          <span class="text-sm" :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'"
+            >Strong</span
+          >
         </div>
 
         <div class="flex justify-center">
@@ -66,9 +77,16 @@
         <div
           v-if="showSubmitted && !editing"
           class="rounded-xl p-6 border mb-6 text-center"
-          :class="$q.dark.isActive ? 'bg-gray-800/50 border-white/10' : 'bg-white border-gray-200 shadow-sm'"
+          :class="
+            $q.dark.isActive
+              ? 'bg-gray-800/50 border-white/10'
+              : 'bg-white border-gray-200 shadow-sm'
+          "
         >
-          <div class="text-xl font-semibold mb-2" :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'">
+          <div
+            class="text-xl font-semibold mb-2"
+            :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'"
+          >
             Thank you for logging your craving!
           </div>
           <div class="text-sm mb-4" :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'">
@@ -88,14 +106,21 @@
       <div
         v-if="editing && !isLoading"
         class="rounded-xl p-6 border mb-6"
-        :class="$q.dark.isActive ? 'bg-gray-800/50 border-white/10' : 'bg-white border-gray-200 shadow-sm'"
+        :class="
+          $q.dark.isActive ? 'bg-gray-800/50 border-white/10' : 'bg-white border-gray-200 shadow-sm'
+        "
       >
-        <div class="text-xl font-semibold text-center mb-6" :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'">
+        <div
+          class="text-xl font-semibold text-center mb-6"
+          :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'"
+        >
           Update your craving level for today
         </div>
 
         <div class="flex items-center justify-center gap-4 mb-6">
-          <span class="text-sm" :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'">None</span>
+          <span class="text-sm" :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'"
+            >None</span
+          >
           <div class="flex gap-4">
             <div
               v-for="level in 5"
@@ -103,10 +128,7 @@
               class="text-center cursor-pointer"
               @click="cravingLevel = level"
             >
-              <div
-                class="craving-icon-container"
-                :class="{ selected: cravingLevel === level }"
-              >
+              <div class="craving-icon-container" :class="{ selected: cravingLevel === level }">
                 <q-icon
                   :name="getCravingIcon(level)"
                   :color="cravingLevel === level ? getCravingColor(level) : 'grey-5'"
@@ -115,14 +137,20 @@
               </div>
             </div>
           </div>
-          <span class="text-sm" :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'">Strong</span>
+          <span class="text-sm" :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'"
+            >Strong</span
+          >
         </div>
 
         <div class="flex justify-center gap-3">
           <button
             @click="cancelEditing"
             class="rounded-md border px-6 py-2 text-sm font-semibold transition-colors"
-            :class="$q.dark.isActive ? 'border-white/10 text-gray-300 hover:bg-white/10' : 'border-gray-300 text-gray-700 hover:bg-gray-50'"
+            :class="
+              $q.dark.isActive
+                ? 'border-white/10 text-gray-300 hover:bg-white/10'
+                : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+            "
           >
             Cancel
           </button>
@@ -140,10 +168,17 @@
         <div
           v-if="showChart"
           class="rounded-xl p-6 border"
-          :class="$q.dark.isActive ? 'bg-gray-800/50 border-white/10' : 'bg-white border-gray-200 shadow-sm'"
+          :class="
+            $q.dark.isActive
+              ? 'bg-gray-800/50 border-white/10'
+              : 'bg-white border-gray-200 shadow-sm'
+          "
         >
           <div class="flex items-center justify-between mb-4">
-            <div class="text-lg font-semibold" :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'">
+            <div
+              class="text-lg font-semibold"
+              :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'"
+            >
               {{ timePeriod }} Craving Trend
             </div>
             <q-select
