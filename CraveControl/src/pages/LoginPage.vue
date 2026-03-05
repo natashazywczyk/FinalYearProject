@@ -3,6 +3,14 @@
     class="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8"
     :class="$q.dark.isActive ? 'bg-gray-900' : 'bg-white'"
   >
+    <router-link
+      to="/"
+      class="absolute top-8 left-8 inline-flex items-center gap-1 text-sm font-medium"
+      :class="$q.dark.isActive ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'"
+    >
+      <span class="material-icons text-base">arrow_back</span>
+      Back
+    </router-link>
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
       <h2
         class="mt-10 text-center text-2xl/9 font-bold tracking-tight"
