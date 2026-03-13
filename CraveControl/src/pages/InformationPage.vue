@@ -1,23 +1,50 @@
 <template>
-  <q-page class="q-pa-md">
-    <div class="row justify-center">
-      <div class="col-12 col-md-10">
-        <q-btn flat icon="arrow_back" label="Back" to="/dashboard" class="q-mb-md" />
+  <q-page class="px-6 py-8" :class="$q.dark.isActive ? 'bg-gray-900' : 'bg-gray-100'">
+    <div class="max-w-5xl mx-auto">
+      <template v-if="pageReady">
+        <router-link
+          to="/dashboard"
+          class="inline-flex items-center gap-1 text-sm font-medium mb-6"
+          :class="
+            $q.dark.isActive
+              ? 'text-gray-400 hover:text-white'
+              : 'text-gray-500 hover:text-gray-900'
+          "
+        >
+          <span class="material-icons text-base">arrow_back</span>
+          Back
+        </router-link>
 
-        <div class="text-h4 q-mb-md">Information</div>
-        <div class="text-subtitle1 q-mb-lg text-grey-7">
+        <div
+          class="text-3xl font-bold mb-2"
+          :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'"
+        >
+          Information
+        </div>
+        <div class="text-sm mb-8" :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'">
           Discover tips and strategies to manage your cravings
         </div>
 
         <!-- Poll trigger -->
-        <div class="q-mb-lg">
-          <span
-            class="poll-link text-primary text-weight-medium cursor-pointer"
+        <div
+          class="rounded-xl p-6 border mb-6"
+          :class="
+            $q.dark.isActive
+              ? 'bg-gray-800/50 border-white/10'
+              : 'bg-white border-gray-200 shadow-sm'
+          "
+        >
+          <button
+            class="poll-link text-sm font-semibold text-[#775AB8] hover:text-[#6B51A6]"
             @click="pollDialog = true"
           >
             Take a quick poll about your disposal habits
-          </span>
-          <span v-if="userHabit" class="q-ml-sm text-grey-6 text-caption">
+          </button>
+          <span
+            v-if="userHabit"
+            class="q-ml-sm text-caption"
+            :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'"
+          >
             (Your answer: <strong>{{ habitLabel(userHabit) }}</strong
             >)
           </span>
@@ -25,14 +52,38 @@
 
         <!-- Age group disposal stats -->
         <div v-if="ageGroupStats.length" class="q-mb-xl">
-          <div class="text-h5 q-mb-sm">Disposal Habits by Age Group</div>
-          <div class="text-body1 text-grey-3 q-mb-md">Based on responses from other users:</div>
-          <div class="row q-gutter-sm">
+          <div
+            class="text-xl font-semibold mb-2"
+            :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'"
+          >
+            Disposal Habits by Age Group
+          </div>
+          <div class="text-sm mb-4" :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'">
+            Based on responses from other users:
+          </div>
+          <div class="row justify-center q-gutter-sm">
             <div v-for="stat in ageGroupStats" :key="stat.ageGroup" class="col-12 col-sm-auto">
-              <q-card flat bordered style="min-width: 160px">
+              <q-card
+                flat
+                bordered
+                style="min-width: 160px"
+                :class="
+                  $q.dark.isActive
+                    ? 'bg-gray-800/50 border-white/10'
+                    : 'bg-white border-gray-200 shadow-sm'
+                "
+              >
                 <q-card-section class="q-pa-sm text-center">
-                  <div class="text-subtitle2 text-weight-bold">{{ stat.ageGroup }}</div>
-                  <div class="text-caption text-grey-7 q-mt-xs">
+                  <div
+                    class="text-subtitle2 text-weight-bold"
+                    :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'"
+                  >
+                    {{ stat.ageGroup }}
+                  </div>
+                  <div
+                    class="text-caption q-mt-xs"
+                    :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'"
+                  >
                     Always: {{ stat.always }} &nbsp;|&nbsp; Sometimes:
                     {{ stat.sometimes }} &nbsp;|&nbsp; Rarely: {{ stat.rarely }}
                   </div>
@@ -41,6 +92,10 @@
             </div>
           </div>
         </div>
+      </template>
+
+      <div v-else class="flex justify-center items-center" style="min-height: 400px">
+        <q-spinner color="primary" size="50px" />
       </div>
     </div>
 
@@ -107,8 +162,11 @@ const $q = useQuasar();
 
 const pollDialog = ref(false);
 const saving = ref(false);
+const pageReady = ref(false);
 const selectedHabit = ref<'always' | 'sometimes' | 'rarely' | null>(null);
 const userHabit = ref<'always' | 'sometimes' | 'rarely' | null>(null);
+
+const MIN_PAGE_LOAD_MS = 350;
 
 interface AgeGroupStat {
   ageGroup: string;
@@ -136,6 +194,10 @@ const pollOptions = [
 
 function habitLabel(val: string | null) {
   return pollOptions.find((o) => o.value === val)?.label ?? val;
+}
+
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 async function loadUserHabit() {
@@ -206,8 +268,8 @@ async function submitPoll() {
 }
 
 onMounted(async () => {
-  await loadUserHabit();
-  await loadAgeGroupStats();
+  await Promise.all([loadUserHabit(), loadAgeGroupStats(), delay(MIN_PAGE_LOAD_MS)]);
+  pageReady.value = true;
 });
 </script>
 
