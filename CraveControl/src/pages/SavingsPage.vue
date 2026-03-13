@@ -356,8 +356,6 @@ const submitEdit = async () => {
       window.dispatchEvent(
         new CustomEvent('savingsUpdated', { detail: { totalSavings: totalSavings.value } }),
       );
-
-      $q.notify({ type: 'positive', message: 'Purchase updated!' });
     }
   } catch (error) {
     console.error('Error updating purchase:', error);
