@@ -11,6 +11,7 @@ export interface Account {
   product_price?: string | null;
   product_image_url?: string | null;
   total_savings?: number;
+  disposal_habit?: 'always' | 'sometimes' | 'rarely' | null;
 }
 
 export interface CravingLevel {
