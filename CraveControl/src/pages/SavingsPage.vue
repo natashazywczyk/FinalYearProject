@@ -282,6 +282,11 @@ const purchaseAnswer = async (answer: boolean) => {
 
         totalSavings.value = account?.total_savings || 0;
       }
+
+      // Notify MainLayout to update savings in side drawer
+      window.dispatchEvent(
+        new CustomEvent('savingsUpdated', { detail: { totalSavings: totalSavings.value } }),
+      );
     }
   } catch (error) {
     console.log('Error saving purchase decision:', error);
@@ -346,6 +351,11 @@ const submitEdit = async () => {
       boughtProduct.value = newAnswer;
       editing.value = false;
       editAnswer.value = null;
+
+      // Notify MainLayout to update savings in side drawer
+      window.dispatchEvent(
+        new CustomEvent('savingsUpdated', { detail: { totalSavings: totalSavings.value } }),
+      );
 
       $q.notify({ type: 'positive', message: 'Purchase updated!' });
     }

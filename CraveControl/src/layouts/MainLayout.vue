@@ -240,5 +240,13 @@ onMounted(() => {
       productName.value = '';
     }
   });
+
+  // Listen for savings update events from SavingsPage
+  window.addEventListener('savingsUpdated', (event: Event) => {
+    const customEvent = event as CustomEvent;
+    if (customEvent.detail?.totalSavings !== undefined) {
+      totalSavings.value = customEvent.detail.totalSavings;
+    }
+  });
 });
 </script>
