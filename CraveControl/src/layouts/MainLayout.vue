@@ -2,12 +2,12 @@
   <q-layout view="lHh Lpr lFf">
     <q-header
       v-if="isLoggedIn"
+      flat
+      :style="{
+        backgroundColor: $q.dark.isActive ? '#030712' : '#e5e7eb',
+      }"
       class="shadow-sm border-b"
-      :class="
-        $q.dark.isActive
-          ? 'bg-gray-800/50 shadow-none border-white/10'
-          : 'bg-gray-50 border-gray-200'
-      "
+      :class="$q.dark.isActive ? 'shadow-none border-white/10' : 'border-gray-200'"
     >
       <div class="px-4">
         <div class="flex h-16 items-center space-x-4">
@@ -22,8 +22,7 @@
           />
           <a
             v-if="isDashboard"
-            class="rounded-md px-3 py-2 text-sm font-medium"
-            :class="$q.dark.isActive ? 'bg-gray-950/50 text-white' : 'bg-gray-100 text-gray-900'"
+            class="rounded-md px-3 py-2 text-sm font-medium bg-[#775AB8] text-white hover:bg-[#6B51A6] ml-2"
             aria-current="page"
           >
             Dashboard
