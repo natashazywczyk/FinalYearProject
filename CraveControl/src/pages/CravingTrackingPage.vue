@@ -235,6 +235,7 @@ const chartOptions = ref({
     zoom: {
       enabled: false,
     },
+    foreColor: '#888',
   },
   stroke: {
     curve: 'straight' as const,
@@ -243,12 +244,27 @@ const chartOptions = ref({
   colors: ['#1976D2'],
   xaxis: {
     categories: [] as string[],
+    labels: {
+      style: {
+        colors: '#888',
+        fontSize: '12px',
+      },
+    },
   },
   yaxis: {
     min: 1,
     max: 5,
     title: {
       text: 'Craving Level',
+      style: {
+        color: '#888',
+      },
+    },
+    labels: {
+      style: {
+        colors: '#888',
+        fontSize: '12px',
+      },
     },
   },
   tooltip: {
@@ -404,21 +420,12 @@ const submitCravingLevel = async () => {
   // Show chart with the new entry
   await updateChartData();
 
-  // If editing, just update and show confirmation
+  // If editing, just update and show chart
   if (editing.value) {
     editing.value = false;
     originalCravingLevel.value = cravingLevel.value;
-    $q.notify({
-      type: 'positive',
-      message: `Craving level updated to ${cravingLevel.value}!`,
-    });
     return;
   }
-
-  // Show thank you message with slight delay
-  setTimeout(() => {
-    showSubmitted.value = true;
-  }, 300);
 
   // Show chart slightly after
   setTimeout(() => {
