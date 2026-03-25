@@ -94,7 +94,7 @@
           Learn more
         </div>
         <div class="text-sm mb-4" :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'">
-          TBA
+          Read information about nicotine
         </div>
         <router-link
           to="/information"
