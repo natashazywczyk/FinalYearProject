@@ -165,54 +165,101 @@
 
     <!-- Poll dialog -->
     <q-dialog v-model="pollDialog" persistent>
-      <q-card style="min-width: 320px; max-width: 420px">
-        <q-card-section class="bg-primary text-white">
-          <div class="text-h6">Disposing Poll</div>
-          <div class="text-caption opacity-80">Responses are anonymous</div>
-        </q-card-section>
+      <div
+        class="rounded-xl border overflow-hidden w-full max-w-md min-w-80"
+        :class="
+          $q.dark.isActive
+            ? 'bg-gray-800 border-white/10'
+            : 'bg-white border-gray-200 shadow-lg'
+        "
+      >
+        <!-- Header -->
+        <div
+          class="px-6 py-4 border-b"
+          :class="
+            $q.dark.isActive
+              ? 'bg-gray-700/50 border-white/10'
+              : 'bg-gray-50 border-gray-200'
+          "
+        >
+          <div
+            class="text-lg font-semibold"
+            :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'"
+          >
+            Disposing Poll
+          </div>
+          <div
+            class="text-sm"
+            :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'"
+          >
+            Responses are anonymous
+          </div>
+        </div>
 
-        <q-card-section>
-          <div class="text-subtitle1 q-mb-md text-weight-medium">
+        <!-- Content -->
+        <div class="px-6 py-4">
+          <div
+            class="text-base font-medium mb-4"
+            :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'"
+          >
             Do you responsibly dispose of your nicotine products?
           </div>
-          <q-list>
-            <q-item
+          <div class="space-y-2">
+            <div
               v-for="opt in pollOptions"
               :key="opt.value"
-              clickable
-              :active="selectedHabit === opt.value"
-              active-class="bg-primary-light text-primary"
-              class="rounded-borders q-mb-xs"
+              class="flex items-center p-3 rounded-lg cursor-pointer transition-colors"
+              :class="
+                selectedHabit === opt.value
+                  ? $q.dark.isActive
+                    ? 'bg-gray-700 text-white'
+                    : 'bg-purple-50 text-purple-900'
+                  : $q.dark.isActive
+                    ? 'hover:bg-gray-700/50 text-gray-300'
+                    : 'hover:bg-gray-50 text-gray-700'
+              "
               @click="selectedHabit = opt.value"
             >
-              <q-item-section avatar>
-                <q-radio v-model="selectedHabit" :val="opt.value" color="primary" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label class="text-weight-medium">{{ opt.label }}</q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-card-section>
+              <input
+                type="radio"
+                :value="opt.value"
+                v-model="selectedHabit"
+                class="w-4 h-4 cursor-pointer"
+              />
+              <label class="ml-3 cursor-pointer font-medium">{{ opt.label }}</label>
+            </div>
+          </div>
+        </div>
 
-        <q-card-actions align="right" class="q-px-md q-pb-md">
-          <q-btn
-            flat
-            label="Cancel"
-            color="grey"
-            v-close-popup
-            @click="selectedHabit = userHabit"
-          />
-          <q-btn
-            label="Submit"
-            color="primary"
-            :disable="!selectedHabit"
-            :loading="saving"
-            unelevated
+        <!-- Footer -->
+        <div
+          class="px-6 py-4 border-t flex justify-end gap-3"
+          :class="
+            $q.dark.isActive
+              ? 'bg-gray-700/30 border-white/10'
+              : 'bg-gray-50 border-gray-200'
+          "
+        >
+          <button
+            @click="selectedHabit = userHabit; pollDialog = false"
+            class="rounded-md px-3 py-1.5 text-sm/6 font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9874C2]"
+            :class="
+              $q.dark.isActive
+                ? 'text-gray-100 bg-white/10 hover:bg-white/20'
+                : 'text-gray-900 bg-gray-200 hover:bg-gray-300'
+            "
+          >
+            Cancel
+          </button>
+          <button
             @click="submitPoll"
-          />
-        </q-card-actions>
-      </q-card>
+            :disabled="!selectedHabit || saving"
+            class="rounded-md bg-[#775AB8] px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-[#6B51A6] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9874C2] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            {{ saving ? 'Submitting...' : 'Submit' }}
+          </button>
+        </div>
+      </div>
     </q-dialog>
   </q-page>
 </template>
