@@ -61,34 +61,27 @@
           <div class="text-sm mb-4" :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'">
             Based on responses from other users:
           </div>
-          <div class="row justify-center q-gutter-sm">
-            <div v-for="stat in ageGroupStats" :key="stat.ageGroup" class="col-12 col-sm-auto">
-              <q-card
-                flat
-                bordered
-                style="min-width: 160px"
-                :class="
-                  $q.dark.isActive
-                    ? 'bg-gray-800/50 border-white/10'
-                    : 'bg-white border-gray-200 shadow-sm'
-                "
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div
+              v-for="stat in ageGroupStats"
+              :key="stat.ageGroup"
+              class="rounded-xl p-4 border text-center last:lg:col-start-2"
+              :class="
+                $q.dark.isActive
+                  ? 'bg-gray-800/50 border-white/10'
+                  : 'bg-white border-gray-200 shadow-sm'
+              "
+            >
+              <div
+                class="font-semibold text-base mb-2"
+                :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'"
               >
-                <q-card-section class="q-pa-sm text-center">
-                  <div
-                    class="text-subtitle2 text-weight-bold"
-                    :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'"
-                  >
-                    {{ stat.ageGroup }}
-                  </div>
-                  <div
-                    class="text-caption q-mt-xs"
-                    :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'"
-                  >
-                    Always: {{ stat.always }} &nbsp;|&nbsp; Sometimes:
-                    {{ stat.sometimes }} &nbsp;|&nbsp; Rarely: {{ stat.rarely }}
-                  </div>
-                </q-card-section>
-              </q-card>
+                {{ stat.ageGroup }}
+              </div>
+              <div class="text-sm" :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'">
+                Always: {{ stat.always }} &nbsp;|&nbsp; Sometimes:
+                {{ stat.sometimes }} &nbsp;|&nbsp; Rarely: {{ stat.rarely }}
+              </div>
             </div>
           </div>
         </div>
@@ -379,7 +372,7 @@ async function loadUserHabit() {
   }
 }
 
-const ALL_AGE_GROUPS = ['Under 18', '18-25', '25-30', '31-40', '41-50', '60+'];
+const ALL_AGE_GROUPS = ['Under 18', '18-25', '25-30', '31-40', '41-50', '51-60', '60+'];
 
 async function loadAgeGroupStats() {
   const { data, error } = await supabase.rpc('get_disposal_habit_stats');
