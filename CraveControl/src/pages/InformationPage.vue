@@ -92,6 +92,77 @@
             </div>
           </div>
         </div>
+
+        <!-- Helpful links -->
+        <div class="q-mt-xl">
+          <div
+            class="text-xl font-semibold"
+            :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'"
+          >
+            Helpful links
+          </div>
+
+          <div class="q-mt-md q-gutter-y-lg">
+            <div v-for="(section, i) in helpfulLinks" :key="i">
+              <div
+                class="text-base q-mb-sm"
+                :class="$q.dark.isActive ? 'text-gray-300' : 'text-gray-700'"
+              >
+                {{ section.title }}
+              </div>
+
+              <div v-if="section.links" class="q-gutter-y-xs">
+                <div
+                  v-for="link in section.links"
+                  :key="link.label"
+                  class="flex items-center gap-3"
+                >
+                  <span
+                    class="text-sm text-weight-medium"
+                    style="min-width: 220px"
+                    :class="$q.dark.isActive ? 'text-gray-300' : 'text-gray-700'"
+                    >{{ link.label }}</span
+                  >
+                  <a
+                    v-if="link.url"
+                    :href="link.url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-sm text-primary"
+                    >{{ link.url }}</a
+                  >
+                </div>
+              </div>
+
+              <div v-if="section.subSections" class="q-gutter-y-sm">
+                <div v-for="sub in section.subSections" :key="sub.label">
+                  <div
+                    class="text-sm text-weight-medium q-mb-xs"
+                    :class="$q.dark.isActive ? 'text-gray-300' : 'text-gray-700'"
+                  >
+                    {{ sub.label }}
+                  </div>
+                  <div v-for="link in sub.links" :key="link.label" class="flex items-center gap-3">
+                    <span
+                      class="text-sm text-weight-medium"
+                      style="min-width: 220px"
+                      :class="$q.dark.isActive ? 'text-gray-300' : 'text-gray-700'"
+                      >{{ link.label }}</span
+                    >
+                    <a
+                      v-if="link.url"
+                      :href="link.url"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="text-sm text-primary"
+                      >{{ link.url }}</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </template>
 
       <div v-else class="flex justify-center items-center" style="min-height: 400px">
@@ -175,21 +246,113 @@ interface AgeGroupStat {
   rarely: number;
 }
 
+interface LinkItem {
+  label: string;
+  url: string | null;
+}
+
+interface SubSection {
+  label: string;
+  links: LinkItem[];
+}
+
+interface LinkSection {
+  title: string;
+  links?: LinkItem[];
+  subSections?: SubSection[];
+}
+
 const ageGroupStats = ref<AgeGroupStat[]>([]);
 
+const helpfulLinks: LinkSection[] = [
+  {
+    title:
+      'Below are some helpful links that provide further information about the effects of vaping:',
+    links: [
+      { label: 'HSE – Vaping', url: 'https://www2.hse.ie/living-well/quit-smoking/vaping/' },
+      {
+        label: 'HSE – Cravings & Withdrawal',
+        url: 'https://www2.hse.ie/living-well/quit-smoking/get-help-to-quit/cravings-withdrawal/',
+      },
+      {
+        label: 'HSE – Young People',
+        url: 'https://www2.hse.ie/living-well/quit-smoking/other-products/young-people/',
+      },
+      {
+        label: 'Citizens Information',
+        url: 'https://www.citizensinformation.ie/en/health/health-services/addiction-treatment-services/help-to-stop-smoking-in-ireland/',
+      },
+      {
+        label: 'NHS – Stop Smoking Services',
+        url: 'https://www.nhs.uk/live-well/quit-smoking/nhs-stop-smoking-services-help-you-quit/',
+      },
+    ],
+  },
+  {
+    title:
+      'Below are some links that provide further information about the effects of nicotine pouches:',
+    links: [
+      {
+        label: 'HSE – Smokeless Products',
+        url: 'https://www2.hse.ie/living-well/quit-smoking/other-products/smokeless/',
+      },
+      {
+        label: 'WebMD – Nicotine Pouches',
+        url: 'https://www.webmd.com/smoking-cessation/nicotine-pouches',
+      },
+    ],
+  },
+  {
+    title:
+      'If you are ever struggling with nicotine addiction, these are some links to helpful organisations:',
+    subSections: [
+      {
+        label: 'In Ireland:',
+        links: [
+          {
+            label: 'HSE – Get Help to Quit',
+            url: 'https://www2.hse.ie/living-well/quit-smoking/get-help-to-quit/',
+          },
+        ],
+      },
+      {
+        label: 'Worldwide:',
+        links: [
+          {
+            label: 'Smokefree.gov – Speak to an Expert',
+            url: 'https://smokefree.gov/tools-tips/get-extra-help/speak-to-an-expert',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    title: 'Below are some helpline phone numbers:',
+    subSections: [
+      {
+        label: 'In Ireland:',
+        links: [{ label: 'HSE: 1800 459 459', url: null }],
+      },
+      {
+        label: 'Worldwide:',
+        links: [
+          { label: 'NHS England: 0300 123 1044', url: null },
+          { label: 'NHS Scotland: 0800 84 84 84', url: null },
+          { label: 'NHS Wales: 0800 085 2219', url: null },
+          {
+            label: 'World Health Organization',
+            url: 'https://www.who.int/campaigns/world-no-tobacco-day/2021/quitting-toolkit/toll-free-quitlines',
+          },
+        ],
+      },
+    ],
+  },
+];
+
 const pollOptions = [
-  {
-    value: 'always' as const,
-    label: 'Always',
-  },
-  {
-    value: 'sometimes' as const,
-    label: 'Sometimes',
-  },
-  {
-    value: 'rarely' as const,
-    label: 'Rarely',
-  },
+  { value: 'always' as const, label: 'Always' },
+  { value: 'sometimes' as const, label: 'Sometimes' },
+  { value: 'rarely' as const, label: 'Rarely' },
 ];
 
 function habitLabel(val: string | null) {
