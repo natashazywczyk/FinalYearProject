@@ -4,13 +4,18 @@
       <router-link
         to="/dashboard"
         class="inline-flex items-center gap-1 text-sm font-medium mb-6"
-        :class="$q.dark.isActive ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'"
+        :class="
+          $q.dark.isActive ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'
+        "
       >
         <span class="material-icons text-base">arrow_back</span>
         Back
       </router-link>
 
-      <div class="text-3xl font-bold mb-2" :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'">
+      <div
+        class="text-3xl font-bold mb-2"
+        :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'"
+      >
         Nicotine Product Selection
       </div>
       <div class="text-sm mb-8" :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'">
@@ -19,7 +24,10 @@
 
       <!-- Select Product Type -->
       <div v-if="currentStep === 1">
-        <div class="text-lg font-semibold text-center mb-6" :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'">
+        <div
+          class="text-lg font-semibold text-center mb-6"
+          :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'"
+        >
           What type of product do you use?
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -28,12 +36,17 @@
             :key="type.value"
             class="rounded-xl p-6 text-center border cursor-pointer transition-all duration-200 hover:-translate-y-1"
             :class="[
-              $q.dark.isActive ? 'bg-gray-800/50 border-white/10 hover:bg-gray-700/50' : 'bg-white border-gray-200 shadow-sm hover:shadow-md',
-              selectedProductType === type.value ? 'ring-2 ring-[#775AB8]' : ''
+              $q.dark.isActive
+                ? 'bg-gray-800/50 border-white/10 hover:bg-gray-700/50'
+                : 'bg-white border-gray-200 shadow-sm hover:shadow-md',
+              selectedProductType === type.value ? 'ring-2 ring-[#775AB8]' : '',
             ]"
             @click="selectProductType(type.value)"
           >
-            <div class="font-semibold text-lg mb-1" :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'">
+            <div
+              class="font-semibold text-lg mb-1"
+              :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'"
+            >
               {{ type.label }}
             </div>
             <div class="text-sm" :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'">
@@ -49,11 +62,18 @@
           <button
             @click="currentStep = 1"
             class="inline-flex items-center gap-1 text-sm font-medium"
-            :class="$q.dark.isActive ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'"
+            :class="
+              $q.dark.isActive
+                ? 'text-gray-400 hover:text-white'
+                : 'text-gray-500 hover:text-gray-900'
+            "
           >
             <span class="material-icons text-base">arrow_back</span>
           </button>
-          <div class="flex-1 text-center text-lg font-semibold" :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'">
+          <div
+            class="flex-1 text-center text-lg font-semibold"
+            :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'"
+          >
             Which brand do you prefer?
           </div>
         </div>
@@ -63,11 +83,13 @@
             :key="brand"
             @click="selectBrand(brand)"
             class="rounded-xl px-6 py-3 text-sm font-semibold border transition-all duration-200 hover:-translate-y-0.5"
-            :class="selectedBrand === brand
-              ? 'bg-[#775AB8] border-[#775AB8] text-white shadow-md'
-              : $q.dark.isActive
-                ? 'bg-gray-800/50 border-white/10 text-gray-300 hover:bg-gray-700/50'
-                : 'bg-white border-gray-200 text-gray-700 shadow-sm hover:shadow-md'"
+            :class="
+              selectedBrand === brand
+                ? 'bg-[#775AB8] border-[#775AB8] text-white shadow-md'
+                : $q.dark.isActive
+                  ? 'bg-gray-800/50 border-white/10 text-gray-300 hover:bg-gray-700/50'
+                  : 'bg-white border-gray-200 text-gray-700 shadow-sm hover:shadow-md'
+            "
           >
             {{ brand }}
           </button>
@@ -80,15 +102,25 @@
           <button
             @click="currentStep = 2"
             class="inline-flex items-center gap-1 text-sm font-medium"
-            :class="$q.dark.isActive ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'"
+            :class="
+              $q.dark.isActive
+                ? 'text-gray-400 hover:text-white'
+                : 'text-gray-500 hover:text-gray-900'
+            "
           >
             <span class="material-icons text-base">arrow_back</span>
           </button>
-          <div class="flex-1 text-center text-lg font-semibold" :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'">
+          <div
+            class="flex-1 text-center text-lg font-semibold"
+            :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'"
+          >
             Select your {{ selectedProductType }}
           </div>
         </div>
-        <div class="text-sm text-center mb-6" :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'">
+        <div
+          class="text-sm text-center mb-6"
+          :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'"
+        >
           Brand: {{ selectedBrand }}
         </div>
 
@@ -98,8 +130,10 @@
             :key="product.name"
             class="rounded-xl border cursor-pointer transition-all duration-200 hover:scale-[1.02] overflow-hidden"
             :class="[
-              $q.dark.isActive ? 'bg-gray-800/50 border-white/10' : 'bg-white border-gray-200 shadow-sm',
-              selectedProduct?.name === product.name ? 'ring-2 ring-[#775AB8]' : ''
+              $q.dark.isActive
+                ? 'bg-gray-800/50 border-white/10'
+                : 'bg-white border-gray-200 shadow-sm',
+              selectedProduct?.name === product.name ? 'ring-2 ring-[#775AB8]' : '',
             ]"
             @click="selectProduct(product)"
           >
@@ -121,11 +155,14 @@
                     @click.stop="saveSelection"
                     class="rounded-md bg-[#775AB8] px-4 py-2 text-sm font-semibold text-white hover:bg-[#6B51A6]"
                   >
-                    Save
+                    Click to Save
                   </button>
                 </div>
               </div>
-              <div class="font-medium text-sm" :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'">
+              <div
+                class="font-medium text-sm"
+                :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'"
+              >
                 {{ product.name }}
               </div>
               <div class="text-[#775AB8] font-semibold mt-1">€{{ product.price }}</div>
@@ -222,21 +259,24 @@ const saveSelection = async () => {
 
   try {
     // Get the current user
-    const {data: {user}} = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     // Add product to user profile
-    const {error} = await supabase
-      .from('account')
-      .upsert({
+    const { error } = await supabase.from('account').upsert(
+      {
         user_id: user!.id, // Skip null check as user has to already be logged in
         product_type: selectedProductType.value,
         product_brand: selectedBrand.value,
         product_name: selectedProduct.value.name,
         product_price: selectedProduct.value.price,
         product_image_url: selectedProduct.value.imageUrl,
-      }, {
-        onConflict: 'user_id'
-      });
+      },
+      {
+        onConflict: 'user_id',
+      },
+    );
 
     if (error) throw error;
 
@@ -253,7 +293,7 @@ const saveSelection = async () => {
           productName: selectedProduct.value.name,
           productPrice: selectedProduct.value.price,
           productImageUrl: selectedProduct.value.imageUrl,
-        }
+        },
       }),
     );
 
