@@ -248,5 +248,13 @@ onMounted(() => {
       totalSavings.value = customEvent.detail.totalSavings;
     }
   });
+
+  // Listen for product update events from NicotineProductSelectionPage
+  window.addEventListener('productUpdated', (event: Event) => {
+    const customEvent = event as CustomEvent;
+    if (customEvent.detail?.productName !== undefined) {
+      productName.value = customEvent.detail.productName;
+    }
+  });
 });
 </script>

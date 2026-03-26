@@ -247,6 +247,16 @@ const saveSelection = async () => {
       position: 'top',
     });
 
+    window.dispatchEvent(
+      new CustomEvent('productUpdated', {
+        detail: {
+          productName: selectedProduct.value.name,
+          productPrice: selectedProduct.value.price,
+          productImageUrl: selectedProduct.value.imageUrl,
+        }
+      }),
+    );
+
     // Redirect to dashboard
     router.push('/dashboard');
   } catch (error) {
