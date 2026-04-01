@@ -382,14 +382,11 @@ const updateChartData = async () => {
 
 const submitCravingLevel = async () => {
   if (!cravingLevel.value) {
-    $q.notify({
-      type: 'warning',
-      message: 'Please select a craving level',
-    });
     return;
   }
 
   hasLoggedCraving.value = true;
+  showSubmitted.value = true;
 
   try {
     const {
@@ -410,10 +407,6 @@ const submitCravingLevel = async () => {
     }
   } catch (error) {
     console.error('Error saving craving level:', error);
-    $q.notify({
-      type: 'negative',
-      message: 'Failed to save craving level',
-    });
     return;
   }
 
@@ -427,15 +420,10 @@ const submitCravingLevel = async () => {
     return;
   }
 
-  // Show chart slightly after
+  // Show chart with slight delay
   setTimeout(() => {
     showChart.value = true;
-  }, 700);
-
-  $q.notify({
-    type: 'positive',
-    message: `Craving level ${cravingLevel.value} submitted!`,
-  });
+  }, 300);
 };
 
 const enableEditing = () => {
