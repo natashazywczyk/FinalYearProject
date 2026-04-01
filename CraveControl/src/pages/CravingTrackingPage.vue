@@ -268,10 +268,14 @@ const chartOptions = ref({
     },
   },
   tooltip: {
+    theme: $q.dark.isActive ? 'dark' : 'light',
     y: {
       formatter: function (val: number) {
         return val.toString();
       },
+    },
+    style: {
+      fontSize: '12px',
     },
   },
 });
@@ -367,6 +371,10 @@ const updateChartData = async () => {
       xaxis: {
         ...chartOptions.value.xaxis,
         categories: categories,
+      },
+      tooltip: {
+        ...chartOptions.value.tooltip,
+        theme: $q.dark.isActive ? 'dark' : 'light',
       },
     };
     series.value = [
