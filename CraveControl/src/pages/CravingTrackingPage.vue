@@ -275,7 +275,15 @@ const chartOptions = ref({
       },
     },
     style: {
-      fontSize: '12px',
+      fontSize: '14px',
+      fontWeight: 600,
+      color: $q.dark.isActive ? '#fff' : '#000',
+      backgroundColor: $q.dark.isActive ? '#1a1a1a' : '#f0f0f0',
+      borderRadius: '4px',
+      padding: '8px 12px',
+    },
+    marker: {
+      show: true,
     },
   },
 });
@@ -375,6 +383,14 @@ const updateChartData = async () => {
       tooltip: {
         ...chartOptions.value.tooltip,
         theme: $q.dark.isActive ? 'dark' : 'light',
+        style: {
+          fontSize: '14px',
+          fontWeight: 600,
+          color: $q.dark.isActive ? '#fff' : '#000',
+          backgroundColor: $q.dark.isActive ? '#1a1a1a' : '#f0f0f0',
+          borderRadius: '4px',
+          padding: '8px 12px',
+        },
       },
     };
     series.value = [
