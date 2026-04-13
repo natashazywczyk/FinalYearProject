@@ -144,16 +144,15 @@ const confirmPassword = ref('');
 const loading = ref(false);
 const tokenValid = ref<boolean | null>(null);
 let unsubscribeAuthListener: (() => void) | null = null;
+let validationTimeoutId: number | null = null;
 
 // Check if there is a valid reset token on mount
 onMounted(async () => {
   const {
     data: { subscription },
   } = supabase.auth.onAuthStateChange((event, session) => {
-    if (event === 'PASSWORD_RECOVERY') {
+    if (event === 'PASSWORD_RECOVERY' || (event === 'SIGNED_IN' && session)) {
       tokenValid.value = true;
-    } else if (!session) {
-      tokenValid.value = false;
     }
   });
 
@@ -165,12 +164,28 @@ onMounted(async () => {
 
   if (session) {
     tokenValid.value = true;
-  } else if (tokenValid.value === null) {
-    tokenValid.value = false;
+    return;
   }
+
+  // Give Supabase time to establish recovery session after redirect
+  validationTimeoutId = window.setTimeout(async () => {
+    const {
+      data: { session: delayedSession },
+    } = await supabase.auth.getSession();
+
+    if (delayedSession) {
+      tokenValid.value = true;
+    } else if (tokenValid.value === null) {
+      tokenValid.value = false;
+    }
+  }, 1500);
 });
 
 onBeforeUnmount(() => {
+  if (validationTimeoutId !== null) {
+    window.clearTimeout(validationTimeoutId);
+  }
+
   if (unsubscribeAuthListener) {
     unsubscribeAuthListener();
   }
