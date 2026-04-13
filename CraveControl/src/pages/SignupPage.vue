@@ -84,7 +84,7 @@
               v-model="ageGroup"
               id="ageGroup"
               required
-              class="block w-full rounded-md px-3 py-1.5 text-base outline-1 -outline-offset-1 focus:outline-2 focus:-outline-offset-2 focus:outline-[#9874C2] sm:text-sm/6"
+              class="block w-full appearance-none rounded-md px-3 py-1.5 pr-10 text-base outline-1 -outline-offset-1 focus:outline-2 focus:-outline-offset-2 focus:outline-[#9874C2] sm:text-sm/6"
               :class="
                 $q.dark.isActive
                   ? 'bg-gray-800 text-white outline-white/10'
