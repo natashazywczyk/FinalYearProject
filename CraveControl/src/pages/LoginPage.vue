@@ -56,6 +56,13 @@
               :class="$q.dark.isActive ? 'text-gray-100' : 'text-gray-900'"
               >Password</label
             >
+            <button
+              type="button"
+              @click="showForgotPasswordDialog = true"
+              class="text-sm font-medium text-[#9874C2] hover:text-[#8260aa]"
+            >
+              Forgot password?
+            </button>
           </div>
           <div class="mt-1">
             <input
@@ -134,6 +141,61 @@
         >
       </p>
     </div>
+
+    <!-- Forgot Password Dialog -->
+    <q-dialog v-model="showForgotPasswordDialog" @hide="resetForgotPasswordForm">
+      <q-card :class="$q.dark.isActive ? 'bg-gray-800' : 'bg-white'" style="min-width: 400px">
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-h6" :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'">
+            Reset Password
+          </div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+
+        <q-card-section>
+          <div
+            class="text-sm q-mb-md"
+            :class="$q.dark.isActive ? 'text-gray-300' : 'text-gray-600'"
+          >
+            An email will be sent with a link to reset your password.
+          </div>
+
+          <div class="q-mb-md">
+            <label
+              class="block text-sm font-medium q-mb-xs"
+              :class="$q.dark.isActive ? 'text-gray-100' : 'text-gray-900'"
+            >
+              Email address
+            </label>
+            <input
+              v-model="forgotPasswordEmail"
+              type="email"
+              required
+              class="w-full rounded-md px-3 py-1.5 text-base outline-1 -outline-offset-1 focus:outline-2 focus:-outline-offset-2 focus:outline-[#9874C2] sm:text-sm/6"
+              :class="
+                $q.dark.isActive
+                  ? 'bg-white/5 text-white outline-white/10 placeholder:text-gray-500'
+                  : 'bg-gray-50 text-gray-900 outline-gray-300 placeholder:text-gray-400'
+              "
+              placeholder="Enter email"
+            />
+          </div>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn label="Cancel" color="grey" flat v-close-popup />
+          <q-btn
+            label="Send Reset Email"
+            color="primary"
+            :disable="!forgotPasswordEmail || forgotPasswordLoading"
+            :loading="forgotPasswordLoading"
+            @click="sendPasswordResetEmail"
+            unelevated
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -150,6 +212,9 @@ const email = ref('');
 const password = ref('');
 const loading = ref(false);
 const googleLoading = ref(false);
+const showForgotPasswordDialog = ref(false);
+const forgotPasswordEmail = ref('');
+const forgotPasswordLoading = ref(false);
 
 // Handle Google OAuth sign in
 const signInWithGoogle = async () => {
@@ -199,5 +264,39 @@ const handleLogin = async () => {
   } finally {
     loading.value = false;
   }
+};
+
+// Handle forgot password, send reset email
+const sendPasswordResetEmail = async () => {
+  if (!forgotPasswordEmail.value) return;
+
+  forgotPasswordLoading.value = true;
+  try {
+    const { error } = await supabase.auth.resetPasswordForEmail(forgotPasswordEmail.value, {
+      redirectTo: `${window.location.origin}/#/reset-password`,
+    });
+
+    if (error) throw error;
+
+    $q.notify({
+      type: 'positive',
+      message: 'Password reset email sent! Check your inbox.',
+    });
+
+    showForgotPasswordDialog.value = false;
+  } catch (error) {
+    const err = error as Error;
+    $q.notify({
+      type: 'negative',
+      message: err.message || 'Error sending reset email',
+    });
+  } finally {
+    forgotPasswordLoading.value = false;
+  }
+};
+
+// Reset forgot password form
+const resetForgotPasswordForm = () => {
+  forgotPasswordEmail.value = '';
 };
 </script>
