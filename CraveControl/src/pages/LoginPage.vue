@@ -312,7 +312,7 @@ const sendPasswordResetEmail = async () => {
   forgotPasswordLoading.value = true;
   try {
     const { error } = await supabase.auth.resetPasswordForEmail(normalizedEmail, {
-      redirectTo: `${window.location.origin}/#/reset-password`,
+      redirectTo: `${window.location.origin}/#/auth-callback`,
     });
 
     if (error) throw error;
