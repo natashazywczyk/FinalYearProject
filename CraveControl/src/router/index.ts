@@ -37,6 +37,7 @@ export default defineRouter(function () {
     const publicPages = ['/', '/login', '/signup', '/reset-password'];
     const isPublicPage = publicPages.includes(to.path);
     const isCompleteProfilePage = to.path === '/complete-profile';
+    const isResetPasswordPage = to.path === '/reset-password';
 
     // Not logged in
     if (!session) {
@@ -60,13 +61,13 @@ export default defineRouter(function () {
     const hasAgeGroup = profile?.age_group;
 
     // If no age group, ensure its entered
-    if (!hasAgeGroup && !isCompleteProfilePage) {
+    if (!hasAgeGroup && !isCompleteProfilePage && !isResetPasswordPage) {
       next('/complete-profile');
       return;
     }
 
     // If has age group and trying to access other pages
-    if (hasAgeGroup && (isPublicPage || isCompleteProfilePage)) {
+    if (hasAgeGroup && (isPublicPage || isCompleteProfilePage) && !isResetPasswordPage) {
       next('/dashboard');
       return;
     }
