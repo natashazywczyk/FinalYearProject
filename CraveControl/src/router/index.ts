@@ -34,7 +34,7 @@ export default defineRouter(function () {
       data: { session },
     } = await supabase.auth.getSession();
 
-    const publicPages = ['/', '/login', '/signup'];
+    const publicPages = ['/', '/login', '/signup', '/reset-password'];
     const isPublicPage = publicPages.includes(to.path);
     const isCompleteProfilePage = to.path === '/complete-profile';
 
