@@ -131,7 +131,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
 import { supabase } from 'boot/supabase';
@@ -143,16 +143,37 @@ const newPassword = ref('');
 const confirmPassword = ref('');
 const loading = ref(false);
 const tokenValid = ref<boolean | null>(null);
+let unsubscribeAuthListener: (() => void) | null = null;
 
 // Check if there is a valid reset token on mount
-onMounted(() => {
-  supabase.auth.onAuthStateChange((event, session) => {
+onMounted(async () => {
+  const {
+    data: { subscription },
+  } = supabase.auth.onAuthStateChange((event, session) => {
     if (event === 'PASSWORD_RECOVERY') {
       tokenValid.value = true;
     } else if (!session) {
       tokenValid.value = false;
     }
   });
+
+  unsubscribeAuthListener = () => subscription.unsubscribe();
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (session) {
+    tokenValid.value = true;
+  } else if (tokenValid.value === null) {
+    tokenValid.value = false;
+  }
+});
+
+onBeforeUnmount(() => {
+  if (unsubscribeAuthListener) {
+    unsubscribeAuthListener();
+  }
 });
 
 // Handle password reset
