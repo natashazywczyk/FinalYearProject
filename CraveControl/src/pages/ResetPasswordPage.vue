@@ -146,6 +146,12 @@ const tokenValid = ref<boolean | null>(null);
 let unsubscribeAuthListener: (() => void) | null = null;
 let validationTimeoutId: number | null = null;
 
+const readUrlParam = (name: string): string | null => {
+  const match = window.location.href.match(new RegExp(`[?#&]${name}=([^&#]+)`));
+  const value = match?.[1];
+  return value ? decodeURIComponent(value) : null;
+};
+
 // Check if there is a valid reset token on mount
 onMounted(async () => {
   const {
@@ -157,6 +163,23 @@ onMounted(async () => {
   });
 
   unsubscribeAuthListener = () => subscription.unsubscribe();
+
+  // Fallback for links containing multiple hashes
+  const accessTokenFromUrl = readUrlParam('access_token');
+  const refreshTokenFromUrl = readUrlParam('refresh_token');
+  const typeFromUrl = readUrlParam('type');
+
+  if (accessTokenFromUrl && refreshTokenFromUrl) {
+    const { error: setSessionError } = await supabase.auth.setSession({
+      access_token: accessTokenFromUrl,
+      refresh_token: refreshTokenFromUrl,
+    });
+
+    if (!setSessionError && (typeFromUrl === 'recovery' || typeFromUrl === null)) {
+      tokenValid.value = true;
+      return;
+    }
+  }
 
   const {
     data: { session },
