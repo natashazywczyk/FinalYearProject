@@ -79,7 +79,7 @@
             :class="$q.dark.isActive ? 'text-gray-100' : 'text-gray-900'"
             >Age Group</label
           >
-          <div class="mt-1">
+          <div class="relative mt-1">
             <select
               v-model="ageGroup"
               id="ageGroup"
@@ -91,18 +91,29 @@
                   : 'bg-gray-50 text-gray-900 outline-gray-300'
               "
             >
-              <option value="" disabled :class="$q.dark.isActive ? 'bg-gray-800' : 'bg-white'">
+              <option
+                value=""
+                disabled
+                :class="$q.dark.isActive ? 'bg-gray-800 text-gray-400' : 'bg-gray-50 text-gray-400'"
+              >
                 Select age group
               </option>
               <option
                 v-for="option in ageGroupOptions"
                 :key="option"
                 :value="option"
-                :class="$q.dark.isActive ? 'bg-gray-800' : 'bg-white'"
+                :class="$q.dark.isActive ? 'bg-gray-800 text-white' : 'bg-gray-50 text-gray-900'"
               >
                 {{ option }}
               </option>
             </select>
+            <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+              <span
+                class="material-icons text-base"
+                :class="$q.dark.isActive ? 'text-gray-400' : 'text-gray-500'"
+                >expand_more
+              </span>
+            </span>
           </div>
         </div>
 
