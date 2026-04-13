@@ -144,13 +144,30 @@
 
     <!-- Forgot Password Dialog -->
     <q-dialog v-model="showForgotPasswordDialog" @hide="resetForgotPasswordForm">
-      <q-card :class="$q.dark.isActive ? 'bg-gray-800' : 'bg-white'" style="min-width: 400px">
+      <q-card
+        class="rounded-xl border"
+        :class="
+          $q.dark.isActive ? 'bg-gray-800 border-white/10 text-white' : 'bg-white border-gray-300'
+        "
+        style="min-width: 400px"
+      >
         <q-card-section class="row items-center q-pb-none">
           <div class="text-h6" :class="$q.dark.isActive ? 'text-white' : 'text-gray-900'">
             Reset Password
           </div>
           <q-space />
-          <q-btn icon="close" flat round dense v-close-popup />
+          <q-btn
+            icon="close"
+            flat
+            round
+            dense
+            v-close-popup
+            :class="
+              $q.dark.isActive
+                ? 'text-gray-300 hover:text-white'
+                : 'text-gray-500 hover:text-gray-900'
+            "
+          />
         </q-card-section>
 
         <q-card-section>
@@ -183,15 +200,27 @@
           </div>
         </q-card-section>
 
-        <q-card-actions align="right">
-          <q-btn label="Cancel" color="grey" flat v-close-popup />
+        <q-card-actions align="right" class="q-gutter-sm q-pa-md">
+          <q-btn
+            label="Cancel"
+            no-caps
+            flat
+            v-close-popup
+            class="rounded-md font-semibold"
+            :class="
+              $q.dark.isActive
+                ? 'text-gray-300 hover:text-white'
+                : 'text-gray-600 hover:text-gray-900'
+            "
+          />
           <q-btn
             label="Send Reset Email"
-            color="primary"
+            no-caps
             :disable="!forgotPasswordEmail || forgotPasswordLoading"
             :loading="forgotPasswordLoading"
             @click="sendPasswordResetEmail"
             unelevated
+            class="rounded-md bg-[#775AB8] px-3 py-1.5 text-sm font-semibold text-white hover:bg-[#6B51A6] disabled:opacity-50"
           />
         </q-card-actions>
       </q-card>
