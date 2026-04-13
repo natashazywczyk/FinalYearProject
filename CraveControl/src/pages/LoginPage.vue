@@ -297,11 +297,21 @@ const handleLogin = async () => {
 
 // Handle forgot password, send reset email
 const sendPasswordResetEmail = async () => {
-  if (!forgotPasswordEmail.value) return;
+  const normalizedEmail = forgotPasswordEmail.value.trim().toLowerCase();
+  if (!normalizedEmail) return;
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(normalizedEmail)) {
+    $q.notify({
+      type: 'negative',
+      message: 'Please enter a valid email address.',
+    });
+    return;
+  }
 
   forgotPasswordLoading.value = true;
   try {
-    const { error } = await supabase.auth.resetPasswordForEmail(forgotPasswordEmail.value, {
+    const { error } = await supabase.auth.resetPasswordForEmail(normalizedEmail, {
       redirectTo: `${window.location.origin}/#/reset-password`,
     });
 
@@ -309,15 +319,25 @@ const sendPasswordResetEmail = async () => {
 
     $q.notify({
       type: 'positive',
-      message: 'Password reset email sent! Check your inbox.',
+      message: 'If an account exists for this email, a reset link has been sent.',
     });
 
     showForgotPasswordDialog.value = false;
   } catch (error) {
     const err = error as Error;
+    const lowerMessage = (err.message || '').toLowerCase();
+
+    let message = err.message || 'Error sending reset email';
+    if (lowerMessage.includes('rate limit') || lowerMessage.includes('too many')) {
+      message = 'Too many reset attempts. Please wait a few minutes and try again.';
+    } else if (lowerMessage.includes('redirect') || lowerMessage.includes('not allowed')) {
+      message = 'Reset redirect URL is not allowed in Supabase Auth settings.';
+    }
+
+    console.error('Password reset request failed:', err);
     $q.notify({
       type: 'negative',
-      message: err.message || 'Error sending reset email',
+      message,
     });
   } finally {
     forgotPasswordLoading.value = false;
