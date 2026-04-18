@@ -220,7 +220,7 @@
             :loading="forgotPasswordLoading"
             @click="sendPasswordResetEmail"
             unelevated
-            class="rounded-md bg-[#775AB8] px-3 py-1.5 text-sm font-semibold text-white hover:bg-[#6B51A6] disabled:opacity-50"
+            class="rounded-md !bg-[#775AB8] px-3 py-1.5 text-sm font-semibold !text-white hover:!bg-[#6B51A6] disabled:opacity-50"
           />
         </q-card-actions>
       </q-card>
