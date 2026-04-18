@@ -1,7 +1,15 @@
 <template>
-  <q-page class="flex flex-center">
+  <q-page
+    class="flex flex-center"
+    :class="$q.dark.isActive ? 'bg-gray-900' : 'bg-white'"
+  >
     <q-spinner color="primary" size="50px" />
-    <div class="q-mt-md text-grey-7">Signing in...</div>
+    <div
+      class="q-mt-md"
+      :class="$q.dark.isActive ? 'text-gray-300' : 'text-gray-600'"
+    >
+      Signing in...
+    </div>
   </q-page>
 </template>
 
