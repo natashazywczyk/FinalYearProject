@@ -1,5 +1,17 @@
 # CraveControl
-My final year project to aid those wanting to quit vaping, with financial motivation and craving visualisation through graphs from self tracking.
+A web application designed to support nicotine cessation through self-tracked craving intensity visualisation and personalised accumulative financial monitoring. CraveControl targets users who wish to quit vaping, e-cigarettes, or nicotine pouches, product categories that are largely absent from existing cessation tools. The application is built on Quasar Framework and uses a Supabase database.
+
+All features are accessible from any browser on any device due to its cloud deployement.
+
+## Repository Structure
+```bash
+FinalYearProject/
+├── CraveControl/
+│   ├── scraper/        # Node.js scrapers for vape and nicotine pouch product data
+│   ├── src/            # Frontend components, pages and Supabase handlers
+│   └── supabase/       # Database migrations
+└── README.md
+```
 
 ## Local Development
 ### Prerequisites
