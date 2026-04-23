@@ -13,6 +13,13 @@ FinalYearProject/
 └── README.md
 ```
 
+## Project Management
+
+Development tasks, bugs, and feature requests were tracked using 
+GitHub Issues and a Kanban board.
+
+[![Project Board](https://img.shields.io/badge/Project-Kanban-blue)](https://github.com/users/natashazywczyk/projects/1)
+
 ## Local Development
 ### Prerequisites
 - Node.js (v18 or higher)
