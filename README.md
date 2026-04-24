@@ -3,6 +3,8 @@ A web application designed to support nicotine cessation through self-tracked cr
 
 All features are accessible from any browser on any device due to its cloud deployement.
 
+---
+
 ## Repository Structure
 ```bash
 FinalYearProject/
@@ -19,6 +21,8 @@ Development tasks, bugs, and feature requests were tracked using
 GitHub Issues and a Kanban board.
 
 [![Project Board](https://img.shields.io/badge/Project-Kanban-blue)](https://github.com/users/natashazywczyk/projects/1)
+
+---
 
 ## Local Development
 ### Prerequisites
@@ -66,3 +70,8 @@ The application will run at `http://localhost:9000`.
 CraveControl is deployed on Vercel. Every push to the main branch triggers an automatic rebuild and redeployment via Vercel's GitHub integration.
 
 Live deployment: [https://cravecontrol.vercel.app](https://cravecontrol.vercel.app/#/)
+
+---
+
+## Screencast
+Link to CraveControl screencast: [Screencast](https://atlantictu-my.sharepoint.com/:v:/g/personal/g00415696_atu_ie/IQBwecIiOUhKRq_GteArUzkGAQBX3psayZ76g1QRy1yF6a8?e=84gyL4&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D)
