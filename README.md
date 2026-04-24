@@ -3,6 +3,11 @@ A web application designed to support nicotine cessation through self-tracked cr
 
 All features are accessible from any browser on any device due to its cloud deployement.
 
+## Main Features
+- **Craving Tracker:** log your daily craving intensity on a scale of 1–5 using emoji icons, and visualise your craving history as an interactive line chart across desired time periods.
+  
+- **Financial Savings Tracker:** answer a daily Yes/No prompt about whether you purchased your nicotine product. The app calculates your accumulative savings based on the real retail price of your selected product.
+
 ---
 
 ## Repository Structure
